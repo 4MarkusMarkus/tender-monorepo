@@ -8,7 +8,7 @@
 
 ```bash
 
-yarn install
+lerna bootstrap
 
 ```
 
