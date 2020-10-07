@@ -10,10 +10,10 @@
   "include": ["./scripts", "./test"],
   "files": [
     "./buidler.config.ts",
-    "@tenderize/node_modules/@nomiclabs/buidler-ethers/src/type-extensions.d.ts",
-    "@tenderize/node_modules/@nomiclabs/buidler-etherscan/src/type-extensions.d.ts",
-    "@tenderize/node_modules/@nomiclabs/buidler-waffle/src/type-extensions.d.ts",
-    "@tenderize/node_modules/buidler-typechain/src/type-extensions.d.ts",
+    "../../node_modules/@nomiclabs/buidler-ethers/src/type-extensions.d.ts",
+    "../../node_modules/@nomiclabs/buidler-etherscan/src/type-extensions.d.ts",
+    "../../node_modules/@nomiclabs/buidler-waffle/src/type-extensions.d.ts",
+    "../../node_modules/buidler-typechain/src/type-extensions.d.ts",
     "./buidler-env.d.ts",
   ]
 }
