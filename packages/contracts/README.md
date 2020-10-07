@@ -6,23 +6,23 @@ This is a starter kit for developing, testing, and deploying smart contracts wit
 
 ## Using this Project
 
-Clone this repository, then install the dependencies with `npm install`. Build everything with `npm run build`. https://buidler.dev has excellent docs, and can be used as reference for extending this project.
+Clone this repository, then install the dependencies with `npm install`. Build everything with `yarn build`. https://buidler.dev has excellent docs, and can be used as reference for extending this project.
 
 ## Available Functionality
 
 ### Build Contracts
 
-`npm run compile`
+`yarn compile`
 
 ### Generate TypeChain Typings
 
-`npm run build`
+`yarn build`
 
 ### Run Contract Tests & Get Callstacks
 
-In one terminal run `npx buidler node`
+In one terminal run `yarn buidler node`
 
-Then in another run `npm run test`
+Then in another run `yarn test`
 
 Notes:
 
@@ -31,9 +31,9 @@ Notes:
 
 ### Run Contract Tests and Generate Gas Usage Report
 
-In one terminal run `npx buidler node`
+In one terminal run `yarn buidler node`
 
-Then in another run `npm run test -- --network localhost`
+Then in another run `yarn test -- --network localhost`
 
 Notes:
 
@@ -42,24 +42,24 @@ Notes:
 
 ### Run Coverage Report for Tests
 
-`npm run coverage`
+`yarn coverage`
 
 Notes:
 
- - running a coverage report currently deletes artifacts, so after each coverage run you will then need to run `npx buidler clean` followed by `npm run build` before re-running tests
+ - running a coverage report currently deletes artifacts, so after each coverage run you will then need to run `npx buidler clean` followed by `yarn build` before re-running tests
  - the branch coverage is 75%
 
 ### Deploy to Ethereum
 
 Create/modify network config in `buidler.config.ts` and add API key and private key, then run:
 
-`npx buidler run --network rinkeby scripts/deploy.ts`
+`yarn buidler run --network rinkeby scripts/deploy.ts`
 
 ### Verify on Etherscan
 
 Add Etherscan API key to `buidler.config.ts`, then run:
 
-`npx buidler verify-contract --contract-name Counter --address <DEPLOYED ADDRESS>`
+`yarn buidler verify-contract --contract-name Counter --address <DEPLOYED ADDRESS>`
 
 ## Enhancement Wish List
 
