@@ -1,24 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import ConnectWalletButton from "./components/ConnectWalletButton";
+import "./App.css";
+import { Box, Button, Heading, Text } from "rimble-ui";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Box>
+        <header className="app-header">
+          <span className="logo">🥩🔨</span>
+          <Heading className="title">Tenderize.me</Heading>
+          <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
+          <ConnectWalletButton />
+        </header>
+      </Box>
     </div>
   );
 }
