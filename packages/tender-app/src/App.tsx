@@ -10,21 +10,6 @@ import {Container, Row, Col} from "react-bootstrap"
 //  }
 //}
 
-/*
-*/
-//const web3Modal = new Web3Modal({
-//  // network: "mainnet", // optional
-//  cacheProvider: true, // optional
-//  providerOptions: {
-//    walletconnect: {
-//      package: WalletConnectProvider, // required
-//      options: {
-//        infuraId: "INFURA_ID" //TODO Make this an ENV,
-//      },
-//    },
-//  },
-//});
-//
 //const logoutOfWeb3Modal = async () => {
 //  await web3Modal.clearCachedProvider();
 //  setTimeout(() => {
@@ -32,22 +17,8 @@ import {Container, Row, Col} from "react-bootstrap"
 //  }, 1);
 //};
 
-
 function App() {
   //const [injectedProvider, setInjectedProvider] = useState();
-
-  ///*
-  //* Web3 modal account login setup
-  //*/
-  //const provider = await web3Modal.connect();
-
-  //useEffect(() => {
-  //  if (web3Modal.cachedProvider) {
-  //    loadWeb3Modal();
-  //  }
-  //}, [loadWeb3Modal]);
-
-  //const userProvider = useUserProvider(injectedProvider);
 
   /*
      Ethers test contract
