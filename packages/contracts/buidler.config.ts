@@ -16,6 +16,9 @@ const config: BuidlerConfig = {
     version: "0.6.8",
   },
   networks: {
+    development: {
+      url: "http://localhost:8545",
+    }
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`,
       accounts: [RINKEBY_PRIVATE_KEY],
