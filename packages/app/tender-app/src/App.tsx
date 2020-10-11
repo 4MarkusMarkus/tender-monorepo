@@ -3,6 +3,8 @@ import logo from "./logo.svg";
 import "./App.css";
 //import WalletConnectProvider from "@walletconnect/web3-provider";
 //import Portis from "@portis/web3";
+import ConnectWalletButton from "./components/ConnectWalletButton";
+import { Box, Button, Heading, Text } from "rimble-ui";
 import ethers from "ethers";
 declare global {
   interface Window {
@@ -54,21 +56,15 @@ function App() {
     console.log(await counter.callStatic.helloWorld({ gasLimit: 500000 }));
   })();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Box>
+        <header className="app-header">
+          <span className="logo">🥩🔨</span>
+          <Heading className="title">Tenderize.me</Heading>
+          <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
+          <ConnectWalletButton />
+        </header>
+      </Box>
     </div>
   );
 }
