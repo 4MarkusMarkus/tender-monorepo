@@ -86,7 +86,6 @@ function App() {
     Return the app!
   */
   return (
-    <div>
       <Container>
         <Row>
           <Col sm={{offset: 8}}>
@@ -102,7 +101,6 @@ function App() {
         </Row>
         <Row></Row>
       </Container>
-    </div>
   );
 }
 
