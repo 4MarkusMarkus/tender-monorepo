@@ -6,28 +6,31 @@
 
 ## 💻 Develop
 
-Setup dependencies:
+Setup initial dependencies:
 ```bash
 
 lerna bootstrap
 
 ```
 ### Running the app:
-Terminal 1:
-```bash
-cd packages/app/tender-app
-yarn start
-```
+#### Backend
 
-Terminal 2:
 ```bash
 cd packages/contracts
 yarn build
 yarn buidler node
 ```
 
-Terminal 3:
+In another terminal:
 ```bash
 cd packages/contracts
 yarn buidler run scripts/deploy.ts --network development
 ```
+
+#### Frontend
+```bash
+cd packages/app/tender-app
+yarn start
+```
+
+Open http://localhost:3000
