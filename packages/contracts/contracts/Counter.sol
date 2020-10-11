@@ -2,7 +2,6 @@ pragma solidity ^0.6.8;
 
 import "@nomiclabs/buidler/console.sol";
 
-
 contract Counter {
     uint256 count = 0;
 
@@ -32,5 +31,9 @@ contract Counter {
 
         emit CountedTo(count);
         return count;
+    }
+
+    function helloWorld() public pure returns (string memory) {
+        return "hello world";
     }
 }
