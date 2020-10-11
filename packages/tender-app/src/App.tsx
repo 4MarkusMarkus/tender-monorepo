@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { ConnectButton } from "./components";
+import { ConnectButton, FeaturedCards } from "./components";
 import { Flex, Box, Button, Heading, Text } from "rimble-ui";
 
 import {Container, Row, Col} from "react-bootstrap"
@@ -88,18 +88,17 @@ function App() {
   return (
       <Container>
         <Row>
-          <Col sm={{offset: 8}}>
+          <Col md={{ span:2, offset: 10}}>
           <ConnectButton />
           </Col>
         </Row>
-        <Row>
-          <Col md={{ span: 6, offset: 3}}>
-            <span className="logo">🥩🔨</span>
-            <Heading className="title">Tenderize.me</Heading>
+        <Row className="app-header">
+          <Col md={{ span: 10, offset: 1}}>
+            <Heading className="title"><span className="logo">🥩</span>Tenderize.me<span className="logo">🔨</span></Heading>
             <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
           </Col>
         </Row>
-        <Row></Row>
+        <FeaturedCards></FeaturedCards>
       </Container>
   );
 }

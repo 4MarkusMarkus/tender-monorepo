@@ -35,7 +35,7 @@ class ConnectButton extends React.Component {
   }
 
   render() {
-    return (<Button onClick={this.onConnect}>Connect Wallet</Button>)
+    return (<Button mt={1} onClick={this.onConnect}>Connect Wallet</Button>)
   }
 }
 
