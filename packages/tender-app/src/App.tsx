@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { ConnectButton, FeaturedCards } from "./components";
 import { Flex, Box, Button, Heading, Text } from "rimble-ui";
-
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import {Container, Row, Col} from "react-bootstrap"
 //declare global {
 //  interface Window {
@@ -54,23 +54,45 @@ function App() {
 
 
   /*
+    Set route changes
+  */
+  //const [route, setRoute] = useState();
+  //useEffect(() => {
+  //  console.log("SETTING ROUTE",window.location.pathname)
+  //  //setRoute(window.location.pathname)
+  //}, [ window.location.pathname ]);
+
+  /*
     Return the app!
   */
   return (
+    <BrowserRouter>
       <Container>
-        <Row>
-          <Col md={{ span:2, offset: 10}}>
-          <ConnectButton />
-          </Col>
-        </Row>
-        <Row className="app-header">
-          <Col md={{ span: 10, offset: 1}}>
-            <Heading className="title"><span className="logo">🥩</span>Tenderize.me<span className="logo">🔨</span></Heading>
-            <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
-          </Col>
-        </Row>
-        <FeaturedCards></FeaturedCards>
+        <Switch>
+          <Route exact path="/">
+            <Row>
+              <Col md={{ span:2, offset: 10}}>
+              <ConnectButton />
+              </Col>
+            </Row>
+            <Row className="app-header">
+              <Col md={{ span: 10, offset: 1}}>
+                <Heading className="title"><span className="logo">🥩</span>Tenderize.me<span className="logo">🔨</span></Heading>
+                <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
+              </Col>
+            </Row>
+            <Row>
+              <FeaturedCards />
+            </Row>
+          </Route>
+        </Switch>
+        <Switch>
+          <Route path="/lpt">
+            {/*TODO: Insert lpt pages here*/}
+          </Route>
+        </Switch>
       </Container>
+    </BrowserRouter>
   );
 }
 
