@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Card, Col} from 'react-bootstrap'
+import { Link } from "react-router-dom"
 import "./TokenCard.css"
 
 type TokenCardProps = {
@@ -14,14 +15,12 @@ export default class TokenCard extends Component<TokenCardProps> {
         url: '/'
     }
 
-    constructor(props: any) { super(props) }
-
     render() {
         const { url, title } = this.props
 
         return (
             <Col md={{span:4}}>
-                <a href={url}>
+                <Link onClick={()=>{console.log("card click")}} to={url}>
                     <Card className="card" style={{ width: '100%' }}>
                     <Card.Img variant="top" src="holder.js/100px180" />
                     <Card.Body>
@@ -32,7 +31,7 @@ export default class TokenCard extends Component<TokenCardProps> {
                         </Card.Text>
                     </Card.Body>
                     </Card>
-                </a>
+                </Link>
             </Col>
         )
     }
