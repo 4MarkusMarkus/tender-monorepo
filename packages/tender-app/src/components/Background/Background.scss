@@ -1,0 +1,17 @@
+/*TODO: replace colors with sass vars*/
+
+.bg-container {
+  box-sizing: border-box;
+  position: absolute;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bg {
+  position: relative;
+  overflow: hidden;
+  border-top: 40vh solid #EBEDF5;
+  border-right: 40vw solid transparent;
+  border-bottom: 120vh solid transparent;
+  border-left: 40vw solid #F1F2F7;
+}

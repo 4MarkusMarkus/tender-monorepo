@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { ConnectButton, FeaturedCards } from "./components";
+import { ConnectButton, FeaturedCards, Background } from "./components";
 import { Flex, Box, Button, Heading, Text } from "rimble-ui";
 
 import {Container, Row, Col} from "react-bootstrap"
@@ -57,6 +57,8 @@ function App() {
     Return the app!
   */
   return (
+    <>
+      <Background />
       <Container>
         <Row>
           <Col md={{ span:2, offset: 10}}>
@@ -69,8 +71,9 @@ function App() {
             <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
           </Col>
         </Row>
-        <FeaturedCards></FeaturedCards>
+        <FeaturedCards />
       </Container>
+    </>
   );
 }
 
