@@ -13,10 +13,10 @@ export default class FeaturedCards extends Component {
                </Col>
                 <Col md={{span: 12}}>
                     <CardDeck>
-                    <TokenCard></TokenCard>
-                    <TokenCard></TokenCard>
-                    <TokenCard></TokenCard>
-                </CardDeck>
+                        <TokenCard title="LivePeer" url="test" />
+                        <TokenCard />
+                        <TokenCard />
+                    </CardDeck>
                 </Col>
            </Row>
         )
