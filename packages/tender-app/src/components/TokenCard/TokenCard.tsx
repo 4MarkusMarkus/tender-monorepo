@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Card, Col} from 'react-bootstrap'
 import { Link } from "react-router-dom"
-import "./TokenCard.css"
+import "./TokenCard.scss"
 
 type TokenCardProps = {
     title: string,
@@ -20,7 +20,7 @@ export default class TokenCard extends Component<TokenCardProps> {
 
         return (
             <Col md={{span:4}}>
-                <Link onClick={()=>{console.log("card click")}} to={url}>
+                <Link to={url} className="card-link">
                     <Card className="card" style={{ width: '100%' }}>
                     <Card.Img variant="top" src="holder.js/100px180" />
                     <Card.Body>

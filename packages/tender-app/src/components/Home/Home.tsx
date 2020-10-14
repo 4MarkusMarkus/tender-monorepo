@@ -6,11 +6,6 @@ import {Container, Row, Col} from "react-bootstrap"
 export default function Home() {
   return(
     <>
-      <Row>
-        <Col md={{ span:2, offset: 10}}>
-        <ConnectButton />
-        </Col>
-      </Row>
       <Row className="app-header">
         <Col md={{ span: 10, offset: 1}}>
           <Heading className="title"><span className="logo">🥩</span>Tenderize.me<span className="logo">🔨</span></Heading>

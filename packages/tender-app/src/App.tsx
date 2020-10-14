@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { ConnectButton, FeaturedCards, Home } from "./components";
-import { Flex, Box, Button, Heading, Text } from "rimble-ui";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import {Container, Row, Col} from "react-bootstrap"
+import { Home, Nav, TokenPage } from "./components";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Container } from "react-bootstrap"
 
 function App() {
   /*
@@ -21,12 +20,13 @@ function App() {
   return (
     <Router>
       <Container>
+        <Nav />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
           <Route path="/livepeer">
-            <Heading className="title"><span className="logo"></span>INSERT TOKEN PAGE<span className="logo"></span></Heading>
+            <TokenPage title="Livepeer"/>
           </Route>
         </Switch>
       </Container>
