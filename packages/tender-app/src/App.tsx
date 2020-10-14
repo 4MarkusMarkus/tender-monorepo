@@ -1,78 +1,40 @@
 import React from "react";
 import "./App.css";
-import { ConnectButton, FeaturedCards, Background } from "./components";
-import { Flex, Box, Button, Heading, Text } from "rimble-ui";
-
-import {Container, Row, Col} from "react-bootstrap"
-//declare global {
-//  interface Window {
-//    ethereum: any;
-//  }
-//}
-
-//const logoutOfWeb3Modal = async () => {
-//  await web3Modal.clearCachedProvider();
-//  setTimeout(() => {
-//    window.location.reload();
-//  }, 1);
-//};
+import { Home, Nav, TokenPage, Background } from "./components";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Container } from "react-bootstrap"
+import stakers from "./data/stakers"
 
 function App() {
-  //const [injectedProvider, setInjectedProvider] = useState();
 
+  const renderTokenPage = (routerProps:any) => {
+    let infoProp = stakers[routerProps.match.url]
+    return (<TokenPage info={infoProp} />)
+  }
   /*
-     Ethers test contract
-     TODO: Delete this, nephew
-  window.ethereum.enable();
-  const read_provider = new ethers.providers.JsonRpcProvider(
-    "http://localhost:8545" //switch to ENV var
-  );
-  const write_provider = new ethers.providers.Web3Provider(
-    window.ethereum
-  ).getSigner();
-
-  const contractABI = require("./temp-abi/helloWorld.json").abi;
-  console.log(contractABI);
-  const counter = new ethers.Contract(
-    ethers.utils.getAddress("0x7c2C195CD6D34B8F845992d380aADB2730bB9C6F"),
-    contractABI,
-    write_provider
-  );
-
-  (async function() {
-    //console.log(await counter);
-    read_provider
-      .getCode(
-        ethers.utils.getAddress("0x7c2C195CD6D34B8F845992d380aADB2730bB9C6F")
-      )
-      .then(function(code) {
-        console.log("Code:", code);
-      });
-    console.log(await counter.callStatic.helloWorld({ gasLimit: 500000 }));
-  })();
+    Set route changes
   */
-
+  //const [route, setRoute] = useState();
+  //useEffect(() => {
+  //  console.log("SETTING ROUTE",window.location.pathname)
+  //  //setRoute(window.location.pathname)
+  //}, [ window.location.pathname ]);
 
   /*
     Return the app!
   */
   return (
     <>
-      <Background />
+    <Background />
+    <Router>
       <Container>
-        <Row>
-          <Col md={{ span:2, offset: 10}}>
-          <ConnectButton />
-          </Col>
-        </Row>
-        <Row className="app-header">
-          <Col md={{ span: 10, offset: 1}}>
-            <Heading className="title"><span className="logo">🥩</span>Tenderize.me<span className="logo">🔨</span></Heading>
-            <Text className="subtext">Don&apos;t just stake me.  Tenderize me first.</Text>
-          </Col>
-        </Row>
-        <FeaturedCards />
+        <Nav />
       </Container>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/stakers/:id" render = { (routerProps:any) => renderTokenPage(routerProps)} />
+        </Switch>
+    </Router>
     </>
   );
 }

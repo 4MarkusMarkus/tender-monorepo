@@ -1,6 +1,7 @@
 /*TODO: replace colors with sass vars*/
 
 .bg-container {
+  z-index: -99;
   box-sizing: border-box;
   position: absolute;
   height: 100%;
