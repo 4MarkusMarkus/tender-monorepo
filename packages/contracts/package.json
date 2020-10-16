@@ -18,7 +18,7 @@
     "url": "git+https://github.com/Tenderize/tender-monorepo.git"
   },
   "scripts": {
-    "ganache": "ganache-cli --deterministic --defaultBalanceEther 500 --gasLimit 100000000",
+    "ganache": "ganache-cli --db='./data/' --deterministic --mnemonic 'pyramid stay enforce ceiling balcony skill casino cup seat letter sight cram' --defaultBalanceEther 500 --gasLimit 100000000",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
