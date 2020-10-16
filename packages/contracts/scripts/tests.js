@@ -28,11 +28,11 @@ module.exports = function(callback) {
             console.log("LPT Balance After Deposit: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
             console.log("tLPT Balance After Deposit: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
 
-            console.log("==== Withdraw ====")
-            await tenderLpt.approve(livepeerStaker.address, deposit)
-            await livepeerStaker.withdraw(deposit)
-            console.log("LPT Balance After Withdraw: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
-            console.log("tLPT Balance After Withdraw: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
+            // console.log("==== Withdraw ====")
+            // await tenderLpt.approve(livepeerStaker.address, deposit)
+            // await livepeerStaker.withdraw(deposit)
+            // console.log("LPT Balance After Withdraw: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
+            // console.log("tLPT Balance After Withdraw: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
 
             console.log("After Share Price:", web3.utils.fromWei(await livepeerStaker.sharePrice()).toString())
 

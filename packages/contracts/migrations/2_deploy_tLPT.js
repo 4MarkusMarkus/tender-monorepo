@@ -111,5 +111,7 @@ module.exports = function(deployer, network, accounts) {
     // Transfer ownership of contracts to the staker 
     await tenderToken.transferOwnership(livepeerStaker.address)
     await crp.setController(livepeerStaker.address)
+
+    // TODO: Transfer Balancer Pool Tokens to Livepeer Staker
     })
 };

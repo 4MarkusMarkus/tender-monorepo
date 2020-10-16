@@ -21,6 +21,9 @@ import "./Swap/IWETH.sol";
 // WETH Address 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
 
 contract Staker is ProxyTarget, Ownable, IStaker {
+
+    uint256 constant public ONE = 1e18;
+
     using SafeMath for uint256;
 
     struct Balancer {
@@ -108,5 +111,20 @@ contract Staker is ProxyTarget, Ownable, IStaker {
         // Gulp the tokens into the pool
         balancer.pool.gulp(address(tenderToken));
         balancer.pool.gulp(address(token));
+    }
+
+    function calcInGivenPrice(address tokenIn, address tokenOut, uint256 targetPrice) internal returns (uint256 tokenInAmount) {
+        uint spotPrice = balancer.pool.getSpotPrice(tokenIn, tokenOut);
+        uint256 tokenInBalance = balancer.pool.getBalance(tokenIn);
+        uint256 tokenInDenorm = balancer.pool.getDenormalizedWeight(tokenIn);
+        uint256 tokenOutDenorm = balancer.pool.getDenormalizedWeight(tokenOut);
+        uint256 swapFee = balancer.pool.getSwapFee();
+        // return calcInGivenSpot(targetSpotPrice, inRecord.denorm, inRecord.balance, outRecord.denorm, spotPrice);
+        uint priceRatio = targetPrice.div(spotPrice);
+        uint wOutRatio = tokenOutDenorm.div(tokenOutDenorm.add(tokenInDenorm));
+        uint priceToWeight = priceRatio**wOutRatio; // TODO: SafeMathify this (i.e. check overflow)
+        uint normPriceToWeight = priceToWeight.sub(ONE);
+        uint256 targetPriceSansFee = tokenInBalance.mul(normPriceToWeight);
+        return targetPriceSansFee.mul(swapFee.add(ONE)).div(ONE);
     }
 }

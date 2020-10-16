@@ -49,18 +49,39 @@ contract LivepeerStaker is Staker {
 
     function deposit(uint256 _amount) external override(Staker) {
         // Calculate share price
-        uint256 sharePrice = sharePrice();
-
+        uint256 sharePrice = sharePrice(); // LPT/tLPT
+        
         uint256 shares = _amount.mul(1e18).div(sharePrice);
 
         // Mint tenderToken
         tenderToken.mint(msg.sender, shares);
 
-        // Split _amount into staking amount and liquidity amount
-        uint256 liquidityAmount = _amount.mul(liquidityPercentage).div(1e18);
-
         // Transfer LPT to Staker
         require(token.transferFrom(msg.sender, address(this), _amount), "ERR_TOKEN_TANSFERFROM");
+
+        // Check arbitrage
+        uint256 spotSharePrice = balancer.pool.getSpotPriceSansFee(address(token), address(tenderToken)); // LPT/tLPT 
+        // 1.2 LPT/tLPT   vs 1.5 LPT/tLPT 
+        // 100 LPT -> 120 tLPT  tLPT vs 100 LPT -> 150 tLPT
+        uint256 tokenInAmount;
+        if (spotSharePrice > sharePrice) {
+            tokenInAmount = calcInGivenPrice(address(token), address(tenderToken), sharePrice);
+            if (tokenInAmount >= _amount) { tokenInAmount = _amount; }
+            token.approve(address(balancer.pool), tokenInAmount);
+            balancer.pool.swapExactAmountIn(address(token), tokenInAmount, address(tenderToken), 1, sharePrice.mul(110).div(100));
+            // approve token in 
+            // tokenOutAmount = swapExactAmountInt(...)
+        } else if (spotSharePrice < sharePrice) {
+            uint256 tokenin = calcInGivenPrice(address(tenderToken), address(token), ONE.div(sharePrice));
+            tenderToken.mint(address(this), tokenin);
+            tenderToken.approve(address(balancer.pool), tokenin);
+            balancer.pool.swapExactAmountIn(address(tenderToken), tokenin, address(token), 1, ONE.div(sharePrice).mul(90).div(100));
+        }
+
+        // _amount = _amount.sub(tokenInAmount);
+        if (_amount == 0) { return; }
+        // Split _amount into staking amount and liquidity amount
+        uint256 liquidityAmount = _amount.mul(liquidityPercentage).div(1e18);
 
         // Add Liquidity
         addLiquidity(liquidityAmount);
@@ -68,7 +89,7 @@ contract LivepeerStaker is Staker {
         // Bond LPT
         token.approve(address(livepeer.bondingManager), _amount);
         livepeer.bondingManager.bond(_amount.sub(liquidityAmount), livepeer.delegate);
-
+        
         emit Deposit(msg.sender, _amount, shares, sharePrice);
     }
 
