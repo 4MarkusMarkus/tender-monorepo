@@ -3,9 +3,12 @@ import "./App.css";
 import { Home, Nav, TokenPage, Background } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "react-bootstrap"
+import { BaseStyles, theme } from "rimble-ui";
+import { ThemeProvider } from "styled-components";
 import stakers from "./data/stakers"
 import ethers from "ethers"
 import Web3Modal from "web3modal";
+declare module 'styled-components'
 
 const providerOptions = {
   /* See Provider Options Section */
@@ -59,22 +62,39 @@ class App extends React.Component<any, State> {
     this.setState({provider})
   }
 
+    // a theme with custom spacing and font sizes
+    customTheme = {
+      ...theme,
+      colors: {
+        ...theme.colors, // keeps existing colors
+        //text: "", // sets color for text
+        background: "#F0F1F5", // sets color for background
+        //primary: "#3259D6", // sets primary color
+        white: "#fff",
+      },
+    }
+
   render() {
     return (
       <>
-      <Background />
-      <Router>
-        <Container>
-          <Nav address={this.state.address} cachedProvider={this.web3Modal.cachedProvider} onConnect={this.onConnect}/>
-        </Container>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/stakers/:id" render = { (routerProps:any) => this.renderTokenPage(routerProps)} />
-          </Switch>
-      </Router>
+      <ThemeProvider theme={this.customTheme}>
+    <BaseStyles>
+    <Background />
+        <Router>
+          <Container>
+            <Nav address={this.state.address} cachedProvider={this.web3Modal.cachedProvider} onConnect={this.onConnect}/>
+          </Container>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/stakers/:id" render = { (routerProps:any) => this.renderTokenPage(routerProps)} />
+            </Switch>
+        </Router>
+    </BaseStyles>
+    </ThemeProvider>
       </>
     );
   }
  }
+
 
 export default App;

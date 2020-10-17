@@ -12,11 +12,8 @@ class ConnectButton extends React.Component<any> {
 
   render() {
     return (
-
-          (<Button.Outline mt={1} bg="white" onClick={this.props.onConnect} style={{zIndex: 99}}>Connect Wallet</Button.Outline>)
-  
+          (<Button.Outline mt={1} mainColor="#4E66DE" onClick={this.props.onConnect} style={{zIndex: 99, background: "white"}}>Connect Wallet</Button.Outline>)
     )
-
   }
 }
 

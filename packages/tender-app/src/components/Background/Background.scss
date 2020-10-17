@@ -1,7 +1,16 @@
 /*TODO: replace colors with sass vars*/
+@import '../../colors.scss';
+
+.background {
+  z-index: -99;
+  background: $bg;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
 
 .bg-container {
-  z-index: -99;
+  z-index: -98;
   box-sizing: border-box;
   position: absolute;
   height: 100%;
@@ -9,10 +18,10 @@
 }
 
 .bg {
+  z-index: -97;
   position: relative;
-  overflow: hidden;
-  border-top: 40vh solid #EBEDF5;
+  border-top: 40vh solid $bg-top;
   border-right: 40vw solid transparent;
   border-bottom: 120vh solid transparent;
-  border-left: 40vw solid #F1F2F7;
+  border-left: 40vw solid $bg-left;
 }

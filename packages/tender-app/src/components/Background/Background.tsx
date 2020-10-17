@@ -3,9 +3,12 @@ import "./Background.scss";
 
 function Background(){
   return(
+    <>
+    <div className="background"></div>
     <div className="bg-container">
       <div className="bg"></div>
     </div>
+    </>
   )
 }
 

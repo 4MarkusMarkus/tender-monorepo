@@ -4,6 +4,8 @@ type Stakers = {
         stakerAddress: string,
         title: string,
         available: boolean,
+        apy: number,
+        logo: string
     }
 }
 
@@ -13,18 +15,24 @@ const stakers: Stakers =  {
         description: "The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which can serve as the live media layer in the decentralized development (web3) stack. In addition, Livepeer is meant to provide an economically efficient alternative to centralized broadcasting solutions for any existing broadcaster. In this document we describe the Livepeer Protocol - a delegated stake based protocol for incentivizing participants in a live video broadcast network in a game-theoretically secure way. We present solutions for the scalable verification of decentralized work, as well as the prevention of useless work in an attempt to game the token allocations in an inflationary system.",
         stakerAddress: "0x6f84742680311CEF5ba42bc10A71a4708b4561d1",
         available: true,
+        apy: 23.3,
+        logo: "livepeer.svg"
     },
     "/stakers/keep": {
         title: "Keep",
         description: "Keeps provide a bridge between the world of public blockchains and private data. It enables a new wave of ground-up innovation for blockchain developers",
         stakerAddress: "",
         available: false,
+        apy: 8.1,
+        logo: "keep.svg"
     },
-    "/stakers/aave": {
-        title: "Aave",
-        description: "Aave is an open source and non-custodial protocol enabling the creation of money markets. Users can earn interest on deposits and borrow assets.",
+    "/stakers/graph": {
+        title: "The Graph",
+        description: "The Graph is an indexing protocol for querying networks like Ethereum and IPFS. Anyone can build and publish open APIs, called subgraphs, making data easily accessible.",
         stakerAddress: "",
         available: false,
+        apy: 6.5,
+        logo: "graph.svg"
     }
 }
 
