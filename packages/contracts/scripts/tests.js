@@ -12,15 +12,18 @@ module.exports = function(callback) {
 
             const lptAddress = await livepeerStaker.token()
             const tenderLptAddress = await livepeerStaker.tenderToken()
-
             const lpt = await ERC20.at(lptAddress)
+
+            // console.log("===== Adresses =====")
+            // console.log("LPT token address: ", lpt)
             const tenderLpt = await ERC20.at(tenderLptAddress)
 
-            const deposit = web3.utils.toWei("200")
+            const deposit = web3.utils.toWei("20")
 
             console.log("===== Deposit =====")
             console.log("LPT Balance Before: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
             console.log("tLPT Balance Before: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
+            console.log("Share Price:", web3.utils.fromWei(await livepeerStaker.sharePrice()).toString())
 
             await lpt.approve(livepeerStaker.address, deposit)
             await livepeerStaker.deposit(deposit)
@@ -30,6 +33,7 @@ module.exports = function(callback) {
 
             console.log("==== Withdraw ====")
             await tenderLpt.approve(livepeerStaker.address, deposit)
+            console.log("==== approved ====")
             await livepeerStaker.withdraw(deposit)
             console.log("LPT Balance After Withdraw: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
             console.log("tLPT Balance After Withdraw: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
