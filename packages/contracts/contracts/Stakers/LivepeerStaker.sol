@@ -12,6 +12,8 @@ contract LivepeerStaker is Staker {
     
     uint256 public liquidityPercentage = 1e17; // we should be able to change this, should be public too, 
     uint256 public mintedForPool;
+    uint256 public sentToPool;
+
 
     // LivepeerStaker only supports on single delegate right now
     // Each delegate would require a separate contract bound to this one to stake and unstake
@@ -30,7 +32,7 @@ contract LivepeerStaker is Staker {
     function sharePrice() public override(Staker) view returns (uint256) {
         // Get the totalSupply for tenderToken, minus the pooled amount
         // Pooled amount does not count for shares
-        uint256 tenderSupply = tenderToken.totalSupply().sub(mintedForPool); //.sub(tenderToken.balanceOf(address(balancer.pool)));
+        uint256 tenderSupply = tenderToken.totalSupply().sub(mintedForPool).sub(sentToPool); //.sub(tenderToken.balanceOf(address(balancer.pool)));
 
         // Get the outstanding balance of LPT for Staker
         uint256 underlyingBalance = token.balanceOf(address(this));
@@ -71,20 +73,27 @@ contract LivepeerStaker is Staker {
         uint256 tokenInBalance = balancer.pool.getBalance(tokenIn);
         uint256 tokenInDenorm = balancer.pool.getDenormalizedWeight(tokenIn);
         uint256 tokenOutDenorm = balancer.pool.getDenormalizedWeight(tokenOut);
-        uint256 swapFee = balancer.pool.getSwapFee();
         // return calcInGivenSpot(targetSpotPrice, inRecord.denorm, inRecord.balance, outRecord.denorm, spotPrice);
         uint priceRatio = targetPrice.div(spotPrice);
         uint wOutRatio = tokenOutDenorm.div(tokenOutDenorm.add(tokenInDenorm));
         uint priceToWeight = priceRatio**wOutRatio; // TODO: SafeMathify this (i.e. check overflow)
         uint normPriceToWeight = priceToWeight.sub(ONE);
-        uint256 targetAmountIn = tokenInBalance.mul(normPriceToWeight);
-        uint256 onePlusFee = swapFee.add(ONE);
-        uint256 helper = targetAmountIn.mul(onePlusFee);
-        uint256 targetAmountInPlusFee = helper.div(ONE);
-        return targetAmountInPlusFee; 
+        return tokenInBalance.mul(normPriceToWeight);
 
 
     }
+
+    function targetTokenAmountToPoolPlusFee() internal view returns (uint256 targetAmountwFee) {
+        uint256 ONE = 10**18;
+        uint256 targetAmountIn = targetTokenAmountToPool();
+        uint256 swapFee = balancer.pool.getSwapFee();
+        uint256 onePlusFee = swapFee.add(ONE);
+        uint256 helper = targetAmountIn.mul(onePlusFee);
+        uint256 targetAmountInPlusFee = helper.div(ONE);
+        return targetAmountInPlusFee;
+
+    }
+
 
 
                                 // swaps underlying token with balancer
@@ -127,7 +136,7 @@ contract LivepeerStaker is Staker {
         if(_sharePrice <= tenderPriceinPool()) {
             stakingAmount = _amount;
         } else {
-            uint256 targetToPool = targetTokenAmountToPool();
+            uint256 targetToPool = targetTokenAmountToPoolPlusFee();
            stakingAmount = _amount.sub(targetToPool);
            // swaps amount necessary for arbitrage to pool
            swapTokenInBalancerPool(targetToPool);
@@ -155,11 +164,11 @@ contract LivepeerStaker is Staker {
         // transferFrom tenderToken
         require(tenderToken.transferFrom(msg.sender, address(this), _amount), "ERR_TENDER_TRANSFERFROM");
 
-        uint256 owed = _amount.mul(sharePrice()).div(1e18);
+        // uint256 owed = _amount.mul(sharePrice()).div(1e18);
         
-        // swap with balancer
-        uint256 out;
-        uint256 minOut = owed.mul(10).div(100); // TODO USE MATHUTILS
+        // makes sure it receives at least 50% out
+        uint256 outTokenFromPool;
+        uint256 minOut = 1;// owed.mul(10).div(100); // TODO USE MATHUTILS
 
         // to calc max spot price seems unnecessary, it is external call, which will be costly, there is already condition about minOut which implies price
         //uint256 maxSpotPrice = balancer.pool.getSpotPrice(address(tenderToken), address(token)).mul(200).div(100); // TODO: USE MATHUTILS
@@ -169,14 +178,14 @@ contract LivepeerStaker is Staker {
         tenderToken.approve(address(balancer.pool), _amount);
         // take out from balancer
 
-        (out,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), minOut, maxSpotPrice);
+        (outTokenFromPool,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), minOut, maxSpotPrice);
 
-        // send underlying + burn 
-        require(token.transfer(msg.sender, out));
-        // tenderToken.burn(_amount); // TODO we need to know the amount that was send back from the pool + burn it, how do we know the amount?
+        // send underlying token out + burn outstanding tenderTokens
+        require(token.transfer(msg.sender, outTokenFromPool));
+        sentToPool = sentToPool.add(_amount); // 
 
 
-        emit Withdraw(msg.sender, _amount, out);
+        emit Withdraw(msg.sender, _amount, outTokenFromPool);
     }
 
 

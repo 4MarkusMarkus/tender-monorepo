@@ -20,13 +20,17 @@ module.exports = function(callback) {
 
             const deposit = web3.utils.toWei("20")
 
-            console.log("===== Deposit =====")
+            console.log("===== Deposit before =====")
+
             console.log("LPT Balance Before: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
             console.log("tLPT Balance Before: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
             console.log("Share Price:", web3.utils.fromWei(await livepeerStaker.sharePrice()).toString())
 
             await lpt.approve(livepeerStaker.address, deposit)
             await livepeerStaker.deposit(deposit)
+            
+            console.log("===== Deposit after =====")
+            console.log("Share Price:", web3.utils.fromWei(await livepeerStaker.sharePrice()).toString())
 
             console.log("LPT Balance After Deposit: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
             console.log("tLPT Balance After Deposit: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
