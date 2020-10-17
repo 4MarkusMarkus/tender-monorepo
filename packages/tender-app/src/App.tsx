@@ -4,39 +4,77 @@ import { Home, Nav, TokenPage, Background } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Container } from "react-bootstrap"
 import stakers from "./data/stakers"
+import ethers from "ethers"
+import Web3Modal from "web3modal";
 
-function App() {
+const providerOptions = {
+  /* See Provider Options Section */
+};
 
-  const renderTokenPage = (routerProps:any) => {
-    let infoProp = stakers[routerProps.match.url]
-    return (<TokenPage info={infoProp} />)
-  }
-  /*
-    Set route changes
-  */
-  //const [route, setRoute] = useState();
-  //useEffect(() => {
-  //  console.log("SETTING ROUTE",window.location.pathname)
-  //  //setRoute(window.location.pathname)
-  //}, [ window.location.pathname ]);
+type Provider = ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider
 
-  /*
-    Return the app!
-  */
-  return (
-    <>
-    <Background />
-    <Router>
-      <Container>
-        <Nav />
-      </Container>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/stakers/:id" render = { (routerProps:any) => renderTokenPage(routerProps)} />
-        </Switch>
-    </Router>
-    </>
-  );
+interface State {
+  provider: Provider
+  address: string
 }
+
+class App extends React.Component<any, State> {
+
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      provider: new ethers.providers.JsonRpcProvider(""),
+      address: ""
+    }
+  }
+
+  web3Modal = new Web3Modal({
+    network: "mainnet", // optional
+    cacheProvider: true, // optional
+    providerOptions // required
+  });
+
+  public componentDidMount() {
+    if (this.web3Modal.cachedProvider) {
+      this.onConnect();
+    }
+  }
+
+  public onConnect = async () => {
+    let provider = await this.web3Modal.connect()
+
+    this.setWeb3Provider(new ethers.providers.Web3Provider(provider))
+    // this.setWeb3Provider(new ethers.providers.JsonRpcProvider("http://localhost:8545"))
+    this.setState({...this.state, address: await this.state.provider.getSigner().getAddress()})
+
+  }
+
+  renderTokenPage = (routerProps:any) => {
+    let infoProp = stakers[routerProps.match.url]
+    return (<TokenPage info={infoProp} provider={this.state.provider} />)
+  }
+
+
+  setWeb3Provider = (provider: Provider) => {
+    this.setState({provider})
+  }
+
+  render() {
+    return (
+      <>
+      <Background />
+      <Router>
+        <Container>
+          <Nav address={this.state.address} cachedProvider={this.web3Modal.cachedProvider} onConnect={this.onConnect}/>
+        </Container>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/stakers/:id" render = { (routerProps:any) => this.renderTokenPage(routerProps)} />
+          </Switch>
+      </Router>
+      </>
+    );
+  }
+ }
 
 export default App;
