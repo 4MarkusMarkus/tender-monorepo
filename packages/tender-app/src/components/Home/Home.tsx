@@ -13,7 +13,7 @@ export default function Home() {
           <Heading className="title" >
             <span style={{color:"#4E66DE"}}>Tenderize</span> me first</Heading>
           <Text className="subtext" style={{marginTop:"1em", fontWeight: "600"}}>The tastiest <span style={{color: "#4E66DE", fontWeight:900}}>liquid stake</span> money can buy.</Text>
-          <img width="200" src="steak-hammer.svg" alt="logo" />
+          <img width="150" src="steak-hammer.svg" alt="logo" />
         </Col>
       </Row>
       <Row>
