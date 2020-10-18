@@ -56,7 +56,7 @@ export default class TokenCard extends Component<TokenCardProps> {
                         </div>
                         <h4>Staking Rewards</h4>
                         <p>(projected APY)</p>
-                        <Button mainColor="#4E66DE" className="cta" disabled={!info.available} style={{background:"#4E66DE"}}>{ctaText()}</Button>
+                        <Button className="cta" disabled={!info.available}>{ctaText()}</Button>
                     </Card.Body>
                 </Card>
             )

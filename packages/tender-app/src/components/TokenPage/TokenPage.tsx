@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
-import {  Button, Heading, Text } from "rimble-ui"
+import { Card, Button, Heading, Text, Avatar, Input } from "rimble-ui"
 import {Container, Row, Col, Tabs, Tab, Form} from "react-bootstrap"
 import { Link } from 'react-router-dom';
+import { TransactionModal } from '..';
 import ethers from "ethers"
+import classNames from "classnames";
+import "./TokenPage.scss"
 import * as api from "../../api/staker"
 
 export type TokenPageProps = {
@@ -29,7 +32,9 @@ interface State {
   tokenAllowance: string,
   tenderAllowance: string,
   depositAmount: string,
-  withdrawAmount: string
+  withdrawAmount: string,
+  transactionModalOpen: boolean,
+  activeTab: string
 }
 
 export default class TokenPage extends Component<TokenPageProps, State> {
@@ -44,7 +49,9 @@ export default class TokenPage extends Component<TokenPageProps, State> {
       tokenAllowance: "0",
       tenderAllowance: "0",
       depositAmount: "0",
-      withdrawAmount: "0"
+      withdrawAmount: "0",
+      transactionModalOpen: false,
+      activeTab: "deposit"
     }
     // this.tokenBalance(this.props.provider).then().catch(e => console.log(e))
   }
@@ -110,9 +117,11 @@ export default class TokenPage extends Component<TokenPageProps, State> {
       }
       return
     }
-    await api.deposit(event.currentTarget.formDeposit.value, this.props.info.stakerAddress, this.props.provider.getSigner())
+    await api.deposit(this.state.depositAmount, this.props.info.stakerAddress, this.props.provider.getSigner())
     await this.tokenBalance(this.props.provider)
     await this.tenderBalance(this.props.provider)
+    await this.tokenAllowance(this.props.provider)
+    await this.setState({...this.state, depositAmount: "0"})
 
   }
 
@@ -128,13 +137,52 @@ export default class TokenPage extends Component<TokenPageProps, State> {
       }
       return
     }
-    await api.withdraw(event.currentTarget.formWithdraw.value, this.props.info.stakerAddress, this.props.provider.getSigner())
+    await api.withdraw(this.state.withdrawAmount, this.props.info.stakerAddress, this.props.provider.getSigner())
     await this.tenderBalance(this.props.provider)
     await this.tokenBalance(this.props.provider)
+    await this.tenderTokenAllowance(this.props.provider)
+    await this.setState({...this.state, withdrawAmount: "0"})
+  }
+
+  openTransactionModal = () => {
+    this.setState({...this.state, transactionModalOpen: true})
+  }
+
+  closeTransactionModal = () => {
+    this.setState({...this.state, transactionModalOpen: false})
+  }
+
+  setTab = (newTab: string) => {
+    this.setState({...this.state, activeTab: newTab})
+  }
+
+  tabButton(name: string) {
+    let active = name === this.state.activeTab
+    if (active) {
+      return(
+        <Button
+          onClick={(e:any) => this.setTab(name)}
+          className={classNames("tab", {active: active})}
+          style={{width: "50%", textTransform: "capitalize", borderRadius: "0"}}>
+            {name}
+        </Button>
+      )
+    } else {
+      return(
+        <Button.Outline
+          onClick={(e:any) => this.setTab(name)}
+          className={classNames("tab", {active: active})}
+          style={{width: "50%", textTransform: "capitalize", borderRadius: "0"}}>
+            {name}
+        </Button.Outline>
+      )
+    }
+
   }
 
   render() {
     const { info } = this.props
+    const logo = require("../../img/" + info.logo)
 
     const depositText = () => {
       if (parseInt(this.state.tokenAllowance, 10) >= parseInt(this.state.depositAmount, 10)) {
@@ -151,45 +199,61 @@ export default class TokenPage extends Component<TokenPageProps, State> {
         return `Approve t${this.props.info.symbol}`
       }
     }
+    // <Form.Control  value={this.state.depositAmount} onChange={this.handleDepositInputChange} type="text" placeholder="0" />
+    // <Form.Control value={this.state.withdrawAmount} onChange={this.handleWithdrawInputChange} type="text" placeholder="0" />
+
 
     return(
-          <>
-          <Link to="/">
+      <>
+        <TransactionModal isOpen={this.state.transactionModalOpen} onClose={this.closeTransactionModal}/>
+        <Container>
+        <Link to="/">
           <Button.Text icon="KeyboardArrowLeft">Back</Button.Text>
         </Link>
-        <Container>
+              <Heading as={"h2"}>About {info.title}</Heading>
           <Row>
             <Col lg={{span: 6}}>
-              <Heading>{info.title}</Heading>
-              <Text>{info.description}</Text>
+              <Card>
+                <Text required="">{info.description}</Text>
+              </Card>
             </Col>
             <Col>
-              <Tabs transition={false} defaultActiveKey="deposit">
-                <Tab eventKey="deposit" title="Deposit">
+              <Card>
+                {this.tabButton("deposit")}
+                {this.tabButton("withdraw")}
+                <Avatar
+                          size="large"
+                          src={logo}
+                          style={{margin: "1em auto 0"}}
+                      />
+                      <Heading style={{textAlign: "center"}}>{info.title}</Heading>
+                      <Heading style={{textAlign: "center"}}>{info.apy}%</Heading>
+                { this.state.activeTab === "deposit" &&
                   <Form onSubmit={this.handleDeposit}>
                   <Form.Group controlId="formDeposit">
+                   
                     <Form.Label>Deposit Amount</Form.Label>
-                    <Form.Control  value={this.state.depositAmount} onChange={this.handleDepositInputChange} type="text" placeholder="0" />
+                    <Input width={1} value={this.state.depositAmount} onChange={this.handleDepositInputChange} type="text" placeholder="0" />
                     <Form.Text className="text-muted">
                       Current Balance: {this.state.tokenBalance} {this.props.info.symbol}
                     </Form.Text>
                   </Form.Group>
-    <Button disabled={this.state.depositAmount == "0"} type="submit">{depositText()}</Button>
+                  <Button disabled={this.state.depositAmount == "0"} style={{width: "100%"}} type="submit">{depositText()}</Button>
                   </Form>
-                </Tab>
-                <Tab eventKey="withdraw" title="Withdraw">
+                }
+                { this.state.activeTab === "withdraw" &&
                   <Form onSubmit={this.handleWithdraw}>
                   <Form.Group controlId="formWithdraw">
                     <Form.Label>Withdraw Amount</Form.Label>
-                    <Form.Control value={this.state.withdrawAmount} onChange={this.handleWithdrawInputChange} type="text" placeholder="0" />
+                    <Input width={1} value={this.state.withdrawAmount} onChange={this.handleWithdrawInputChange} type="text" placeholder="0"  />
                     <Form.Text className="text-muted">
                       Current Balance: {this.state.tenderBalance} t{this.props.info.symbol}
                     </Form.Text>
                   </Form.Group>
-                  <Button disabled={this.state.withdrawAmount == "0"} type="submit">{withdrawText()}</Button>
+                  <Button disabled={this.state.withdrawAmount == "0"} style={{width: "100%"}} type="submit">{withdrawText()}</Button>
                   </Form>
-                </Tab>
-              </Tabs>
+                }
+              </Card>
             </Col>
           </Row>
         </Container>

@@ -69,7 +69,7 @@ class App extends React.Component<any, State> {
         ...theme.colors, // keeps existing colors
         //text: "", // sets color for text
         background: "#F0F1F5", // sets color for background
-        //primary: "#3259D6", // sets primary color
+        primary: "#4E66DE", // sets primary color
         white: "#fff",
       },
     }

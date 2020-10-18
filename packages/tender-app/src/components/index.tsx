@@ -1,17 +1,19 @@
 import Background from "./Background/Background"
 import ConnectButton from "./ConnectButton/ConnectButton"
-import TokenCard from "./TokenCard/TokenCard"
 import FeaturedCards from "./FeaturedCards/FeaturedCards"
-import TokenPage from "./TokenPage/TokenPage"
 import Home from "./Home/Home"
 import Nav from "./Nav/Nav"
+import TokenCard from "./TokenCard/TokenCard"
+import TokenPage from "./TokenPage/TokenPage"
+import TransactionModal from "./TransactionModal/TransactionModal"
 
 export {
     Background,
     ConnectButton,
-    TokenCard,
     FeaturedCards,
-    TokenPage,
     Home,
-    Nav
+    Nav,
+    TokenCard,
+    TokenPage,
+    TransactionModal,
 }
