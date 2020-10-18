@@ -29,10 +29,13 @@ module.exports = function(deployer, network, accounts) {
 
     deployer.then(async () => {
             // Deploy tender token 
-    tenderToken = await deployer.deploy(TenderToken, "Livepeer Token", "LPT")
+    tenderToken = await deployer.deploy(TenderToken, "tender Livepeer Token", "tLPT")
 
     // Mint the initial liquidity for a 50/50 pool to us
     tenderToken.mint(accounts[0], config.INITIAL_LIQUIDITY.toString())
+
+    // Mints liquidity for another user to test trading against pool 
+    tenderToken.mint(accounts[1], config.INITIAL_LIQUIDITY.toString())
 
     // Change TenderToken ownership to LivepeerStaker after deploying it
 
@@ -70,8 +73,10 @@ module.exports = function(deployer, network, accounts) {
 
     const crp = await CRP.at(tx.logs[0].args.pool)
 
-    // approve the constituent tokens
+
     const livepeerToken = await ERC20.at(config.LIVEPEER_TOKEN)
+    // await livepeerToken.transfer(accounts[1],)
+    // // approve the constituent tokens
     await livepeerToken.approve(crp.address, config.INITIAL_LIQUIDITY.toString())
     await tenderToken.approve(crp.address, config.INITIAL_LIQUIDITY.toString())
 

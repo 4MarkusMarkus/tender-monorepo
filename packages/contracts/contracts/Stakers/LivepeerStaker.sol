@@ -32,7 +32,7 @@ contract LivepeerStaker is Staker {
     function sharePrice() public override(Staker) view returns (uint256) {
         // Get the totalSupply for tenderToken, minus the pooled amount
         // Pooled amount does not count for shares
-        uint256 tenderSupply = tenderToken.totalSupply().sub(mintedForPool).sub(sentToPool); //.sub(tenderToken.balanceOf(address(balancer.pool)));
+        uint256 tenderSupply = tenderToken.totalSupply().sub(tenderToken.balanceOf(address(balancer.pool))); // liquidityForPool = this is liquidity of tenderToken we mint when we icrease pool liquidity
 
         // Get the outstanding balance of LPT for Staker
         uint256 underlyingBalance = token.balanceOf(address(this));
@@ -180,9 +180,9 @@ contract LivepeerStaker is Staker {
 
         (outTokenFromPool,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), minOut, maxSpotPrice);
 
-        // send underlying token out + burn outstanding tenderTokens
+        // send underlying token out
         require(token.transfer(msg.sender, outTokenFromPool));
-        sentToPool = sentToPool.add(_amount); // 
+                                                                    //sentToPool = sentToPool.add(_amount); // 
 
 
         emit Withdraw(msg.sender, _amount, outTokenFromPool);
