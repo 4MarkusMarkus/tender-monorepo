@@ -5,7 +5,8 @@ type Stakers = {
         title: string,
         available: boolean,
         apy: number,
-        logo: string
+        logo: string,
+        symbol: string
     }
 }
 
@@ -16,7 +17,8 @@ const stakers: Stakers =  {
         stakerAddress: "0x6f84742680311CEF5ba42bc10A71a4708b4561d1",
         available: true,
         apy: 23.3,
-        logo: "livepeer.svg"
+        logo: "livepeer.svg",
+        symbol: "LPT"
     },
     "/stakers/keep": {
         title: "Keep",
@@ -24,7 +26,8 @@ const stakers: Stakers =  {
         stakerAddress: "",
         available: false,
         apy: 8.1,
-        logo: "keep.svg"
+        logo: "keep.svg",
+        symbol: "KEEP"
     },
     "/stakers/graph": {
         title: "The Graph",
@@ -32,7 +35,8 @@ const stakers: Stakers =  {
         stakerAddress: "",
         available: false,
         apy: 6.5,
-        logo: "graph.svg"
+        logo: "graph.svg",
+        symbol: "GRT"
     }
 }
 
