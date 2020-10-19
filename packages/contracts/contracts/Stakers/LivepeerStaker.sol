@@ -31,7 +31,6 @@ contract LivepeerStaker is Staker {
 
     function sharePrice() public override(Staker) view returns (uint256) {
         // Get the totalSupply for tenderToken, minus the pooled amount
-        // Pooled amount does not count for shares
         uint256 tenderSupply = tenderToken.totalSupply().sub(tenderToken.balanceOf(address(balancer.pool))); // liquidityForPool = this is liquidity of tenderToken we mint when we icrease pool liquidity
 
         // Get the outstanding balance of LPT for Staker
