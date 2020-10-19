@@ -1,6 +1,6 @@
 # 🥩 [tenderize.me](https://tenderize.me)
 
-> don't just stake me, [tenderize.me](https://tenderize.me) first 🔨
+> Don't just stake me, [tenderize.me](https://tenderize.me) first 🔨
 
 ---
 
@@ -22,7 +22,7 @@ yarn buidler node
 
 #### Frontend
 ```bash
-cd packages/app
+cd packages/tender-app
 yarn start
 ```
 
