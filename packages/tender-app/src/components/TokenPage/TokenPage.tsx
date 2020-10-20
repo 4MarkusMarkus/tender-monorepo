@@ -7,7 +7,8 @@ import ethers from "ethers"
 import classNames from "classnames";
 import "./TokenPage.scss"
 import * as api from "../../api/staker"
-
+import {TrendingUp, TrendingDown} from '@rimble/icons';
+declare module '@rimble/icons'
 export type TokenPageProps = {
   info: CardInfo,
   provider: ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider
@@ -34,7 +35,9 @@ interface State {
   depositAmount: string,
   withdrawAmount: string,
   transactionModalOpen: boolean,
-  activeTab: string
+  activeTab: string,
+  startSharePrice: number,
+  currentSharePrice: number
 }
 
 export default class TokenPage extends Component<TokenPageProps, State> {
@@ -51,7 +54,10 @@ export default class TokenPage extends Component<TokenPageProps, State> {
       depositAmount: "0",
       withdrawAmount: "0",
       transactionModalOpen: false,
-      activeTab: "deposit"
+      activeTab: "deposit",
+      startSharePrice: 1.00,
+      currentSharePrice: 1.00,
+
     }
     // this.tokenBalance(this.props.provider).then().catch(e => console.log(e))
   }
@@ -80,7 +86,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
     await this.tenderTokenAllowance(this.props.provider)
     await this.tokenBalance(this.props.provider).then().catch(e => console.log(e))
     await this.tenderBalance(this.props.provider).then().catch(e => console.log(e))
-    console.log(this.state)
+    await this.setState({...this.state, currentSharePrice: parseFloat(await api.sharePrice(this.props.info.stakerAddress, this.props.provider))})
   }
 
   tenderBalance = async (provider:any) => {
@@ -199,6 +205,20 @@ export default class TokenPage extends Component<TokenPageProps, State> {
         return `Approve t${this.props.info.symbol}`
       }
     }
+
+    const sharePriceChange = () => {
+      const change = (this.state.currentSharePrice / this.state.startSharePrice - 1).toFixed(2)
+      if (this.state.currentSharePrice > this.state.startSharePrice) {
+        return (
+        <h2>{this.state.currentSharePrice.toFixed(2)}<span style={{fontSize: 15}}><sup>LPT</sup> &#8260; <sub>tLPT</sub></span><span style={{fontSize:25, fontWeight:600}}> (<TrendingUp color="success" />{change}%)</span></h2>
+          )
+      } else if (this.state.currentSharePrice < this.state.startSharePrice) {
+        return (<h2>{this.state.currentSharePrice.toFixed(2)}<sup>LPT</sup> &#8260; <sub>tLPT</sub><span style={{fontSize:25, fontWeight:600}}> (<TrendingDown />{change}%)</span></h2>)
+      } else {
+        return (<h2>{this.state.currentSharePrice.toFixed(2)}<sup>LPT</sup> &#8260; <sub>tLPT</sub><span style={{fontSize:25, fontWeight:600}}> (--%)</span></h2>
+          )
+      }
+    }
     // <Form.Control  value={this.state.depositAmount} onChange={this.handleDepositInputChange} type="text" placeholder="0" />
     // <Form.Control value={this.state.withdrawAmount} onChange={this.handleWithdrawInputChange} type="text" placeholder="0" />
 
@@ -227,7 +247,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                           style={{margin: "1em auto 0"}}
                       />
                       <Heading style={{textAlign: "center"}}>{info.title}</Heading>
-                      <Heading style={{textAlign: "center"}}>{info.apy}%</Heading>
+                      <Heading style={{textAlign: "center"}}>{sharePriceChange()}</Heading>
                 { this.state.activeTab === "deposit" &&
                   <Form onSubmit={this.handleDeposit}>
                   <Form.Group controlId="formDeposit">
