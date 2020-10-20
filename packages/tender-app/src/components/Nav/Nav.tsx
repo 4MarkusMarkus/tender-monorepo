@@ -10,6 +10,8 @@ export default class Nav extends React.Component<any> {
   }
 
   render() {
+    const logo = require("../../img/tenderizeLogo.svg")
+
     let component 
     if (this.props.cachedProvider) {
       component = (
@@ -28,7 +30,7 @@ export default class Nav extends React.Component<any> {
       <>
         <Row>
         <Col md={{ span: 3 }} lg={{ span:3 }}>
-          <img src="tenderizeLogo.svg" alt="logo" style={{marginTop: "1em"}}/>
+          <img src={logo} alt="logo" style={{marginTop: "1em"}}/>
         </Col>
           {component}
         </Row>

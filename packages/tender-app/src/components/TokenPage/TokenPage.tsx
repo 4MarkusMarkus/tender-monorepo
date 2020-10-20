@@ -247,7 +247,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                           style={{margin: "1em auto 0"}}
                       />
                       <Heading style={{textAlign: "center"}}>{info.title}</Heading>
-                      <Heading style={{textAlign: "center"}}>{sharePriceChange()}</Heading>
+                      <div style={{textAlign: "center"}}>{sharePriceChange()}</div>
                 { this.state.activeTab === "deposit" &&
                   <Form onSubmit={this.handleDeposit}>
                   <Form.Group controlId="formDeposit">
