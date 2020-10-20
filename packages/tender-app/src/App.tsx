@@ -57,6 +57,9 @@ class App extends React.Component<any, State> {
     return (<TokenPage info={infoProp} provider={this.state.provider} />)
   }
 
+  renderHomePage= () => {
+    return (<Home provider={this.state.provider}></Home>)
+  }
 
   setWeb3Provider = (provider: Provider) => {
     this.setState({provider})
@@ -85,7 +88,7 @@ class App extends React.Component<any, State> {
             <Nav address={this.state.address} cachedProvider={this.web3Modal.cachedProvider} onConnect={this.onConnect}/>
           </Container>
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" render= {() => this.renderHomePage()} />
               <Route path="/stakers/:id" render = { (routerProps:any) => this.renderTokenPage(routerProps)} />
             </Switch>
         </Router>

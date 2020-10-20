@@ -4,10 +4,12 @@ import { Link } from "react-router-dom"
 import {  Button, Heading, Text, Avatar } from "rimble-ui"
 import classNames from "classnames";
 import "./TokenCard.scss"
-
+import {SharePrice} from ".."
+import {ethers} from "ethers"
 type TokenCardProps = {
     url: string,
     info: CardInfo
+    provider:ethers.providers.Web3Provider | ethers.providers.JsonRpcProvider
 }
 
 type CardInfo = {
@@ -16,7 +18,8 @@ type CardInfo = {
     title: string,
     available: boolean,
     apy: number,
-    logo: string
+    logo: string,
+    symbol: string
 }
 
 export default class TokenCard extends Component<TokenCardProps> {
@@ -50,12 +53,7 @@ export default class TokenCard extends Component<TokenCardProps> {
                         <Card.Title>
                             <h2>{info.title.toUpperCase()}</h2>
                         </Card.Title>
-                        <div style={{textAlign:"center"}}>
-                        <h2>{info.apy}<span style={{fontSize:25, fontWeight:600}}>%</span></h2>
-
-                        </div>
-                        <h4>Staking Rewards</h4>
-                        <p>(projected APY)</p>
+                        <SharePrice symbol={this.props.info.symbol} available={this.props.info.available} stakerAddress={this.props.info.stakerAddress} provider={this.props.provider} />
                         <Button className="cta" disabled={!info.available}>{ctaText()}</Button>
                     </Card.Body>
                 </Card>

@@ -6,7 +6,7 @@ import Nav from "./Nav/Nav"
 import TokenCard from "./TokenCard/TokenCard"
 import TokenPage from "./TokenPage/TokenPage"
 import TransactionModal from "./TransactionModal/TransactionModal"
-
+import SharePrice from "./SharePrice/SharePrice"
 export {
     Background,
     ConnectButton,
@@ -16,4 +16,5 @@ export {
     TokenCard,
     TokenPage,
     TransactionModal,
+    SharePrice
 }

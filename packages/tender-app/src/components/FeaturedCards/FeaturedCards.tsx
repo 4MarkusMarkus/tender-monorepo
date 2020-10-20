@@ -5,12 +5,17 @@ import { Link } from 'rimble-ui';
 import "./FeaturedCards.css"
 import stakers from "../../data/stakers"
 
-export default class FeaturedCards extends Component {
+export default class FeaturedCards extends Component<any> {
+
+    constructor(props:any) {
+        super(props)
+    }
+
     render() {
         const cards = []
         let key:string
         for (key in stakers) {
-            cards.push(<TokenCard info={stakers[key]} url={key} key={key} />)
+            cards.push(<TokenCard provider={this.props.provider} info={stakers[key]} url={key} key={key} />)
         }
         return (
             <>
