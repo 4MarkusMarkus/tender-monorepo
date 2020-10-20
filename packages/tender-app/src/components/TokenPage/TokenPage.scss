@@ -1,5 +1,34 @@
-@import '../../colors.scss';
+@import "../../colors.scss";
 
 .tab:not(.active) {
   background: $primary;
+}
+
+.text-muted {
+  font-size: 90%;
+}
+
+.share {
+  box-sizing: border-box;
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.numerator {
+  border-bottom: 3px solid $default-text;
+}
+
+.denominator {
+  line-height: 1.5;
+}
+
+.price,
+.apy {
+  font-size: 4rem;
+}
+
+.apy {
+  line-height: 1.75;
 }
