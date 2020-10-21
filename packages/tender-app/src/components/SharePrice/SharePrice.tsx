@@ -10,7 +10,7 @@ export default class SharePrice extends React.Component<any, any> {
     super(props);
     this.state = {
       startSharePrice: 1.0,
-      currentSharePrice: 1.0,
+      currentSharePrice: 1.5,
     };
   }
 
@@ -36,11 +36,11 @@ export default class SharePrice extends React.Component<any, any> {
 
     const trendingIcon = () => {
       if (this.state.currentSharePrice > this.state.startSharePrice) {
-        return <TrendingUp color="success" />;
+        return <TrendingUp color="success" className="trending" />;
       } else if (this.state.currentSharePrice < this.state.startSharePrice) {
-        return <TrendingDown color="alert" />;
+        return <TrendingDown color="alert" className="trending" />;
       } else {
-        return <TrendingUp color="white" />;
+        return <TrendingUp color="white" className="trending" />;
       }
     };
 
@@ -61,8 +61,8 @@ export default class SharePrice extends React.Component<any, any> {
             </span>
           </h4>
           <span>
-            <span className="trending">{trendingIcon()}</span>
-            <span className="percent">{changeAmount()} %</span>
+            <span>{trendingIcon()}</span>
+            <span className="percent">{changeAmount()}%</span>
           </span>
         </div>
       );
