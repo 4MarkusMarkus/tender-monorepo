@@ -46,7 +46,7 @@ export default class SharePrice extends React.Component<any, any> {
 
     const changeAmount = () => {
       let change =
-        this.state.currentSharePrice / this.state.startSharePrice - 1;
+        (this.state.currentSharePrice / this.state.startSharePrice - 1) * 100;
 
       return change === 0 ? this.pricePlaceholder : change.toFixed(2);
     };
