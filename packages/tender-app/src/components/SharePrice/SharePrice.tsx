@@ -1,6 +1,7 @@
 import React from "react";
 import * as api from "../../api/staker";
 import { TrendingUp, TrendingDown } from "@rimble/icons";
+import "./SharePrice.scss";
 
 export default class SharePrice extends React.Component<any, any> {
   pricePlaceholder = "-.--";
@@ -32,6 +33,7 @@ export default class SharePrice extends React.Component<any, any> {
         return this.pricePlaceholder;
       }
     };
+
     const trendingIcon = () => {
       if (this.state.currentSharePrice > this.state.startSharePrice) {
         return <TrendingUp color="success" />;
@@ -51,20 +53,17 @@ export default class SharePrice extends React.Component<any, any> {
     const sharePriceChange = () => {
       return (
         <div style={{ marginTop: 10, marginBottom: 10 }}>
-          <h3>{sharePrice()}</h3>
-          <h5>
+          <h3 className="price">{sharePrice()}</h3>
+          <h4>
             <span style={{ fontSize: 15 }}>
               <sup>{this.props.symbol}</sup> &#8260;{" "}
               <sub>{`t${this.props.symbol}`}</sub>
             </span>
-          </h5>
-          <h5>
-            <span>
-              {" "}
-              {trendingIcon()}
-              {changeAmount()} %
-            </span>
-          </h5>
+          </h4>
+          <span>
+            <span className="trending">{trendingIcon()}</span>
+            <span className="percent">{changeAmount()} %</span>
+          </span>
         </div>
       );
     };
