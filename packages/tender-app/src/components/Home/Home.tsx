@@ -1,6 +1,6 @@
 import React from "react";
 import { FeaturedCards } from "..";
-import { Card, Heading, Text, Image } from "rimble-ui";
+import { Card, Heading, Text, Image, Icon } from "rimble-ui";
 import { Container, Row, Col } from "react-bootstrap";
 import "./home.scss";
 export default class Home extends React.Component<any> {
@@ -23,9 +23,9 @@ export default class Home extends React.Component<any> {
                 className="subtext"
                 style={{ marginTop: "1em", fontWeight: "600" }}
               >
-                Make
+                Making
                 <span style={{ color: "#4E66DE", fontWeight: 900 }}>
-                  {" staking easier "}
+                  {" stake easier "}
                 </span>
                 to chew.
               </Text>
@@ -34,6 +34,19 @@ export default class Home extends React.Component<any> {
           </Row>
           <Row>
             <FeaturedCards provider={this.props.provider} />
+          </Row>
+
+          <Row style={{ marginTop: "6em" }}>
+            <Col lg={{ span: 6 }} md={{ span: 6 }}>
+              <Image src="potionHero.svg"></Image>
+            </Col>
+            <Col lg={{ span: 6 }} md={{ span: 6 }}>
+              <Heading as={"h4"} style={{ margin: "15% 10%", lineHeight: 2 }}>
+                Tenderize makes it easier to participate in decentralised
+                protocols and
+                <span style={{ fontWeight: 800 }}> earn staking rewards</span>.
+              </Heading>
+            </Col>
           </Row>
 
           <Row style={{ marginTop: "6em", marginBottom: "6em" }}>
@@ -47,7 +60,12 @@ export default class Home extends React.Component<any> {
                       md={{ span: 3 }}
                       lg={{ span: 2 }}
                     >
-                      <span className="highlight">Step 1</span>
+                      <Icon
+                        name="KeyboardArrowRight"
+                        color="#4e66de"
+                        size="60"
+                        aria-label="Bullet"
+                      />
                     </Col>
                     <Col
                       className="step-text"
@@ -55,8 +73,8 @@ export default class Home extends React.Component<any> {
                       md={{ span: 9 }}
                       lg={{ span: 10 }}
                     >
-                      Order off our farm-fresh stake menu. Deposit your stake
-                      and let the tenderizing begin.
+                      Deposit your stake to tenderize it and earn rewards that
+                      are automatically reinvested.
                     </Col>
                   </Row>
                   <Row className="step">
@@ -66,7 +84,12 @@ export default class Home extends React.Component<any> {
                       md={{ span: 3 }}
                       lg={{ span: 2 }}
                     >
-                      <span className="highlight">Step 2</span>
+                      <Icon
+                        name="KeyboardArrowRight"
+                        color="#4e66de"
+                        size="60"
+                        aria-label="Bullet"
+                      />
                     </Col>
                     <Col
                       className="step-text"
@@ -74,12 +97,8 @@ export default class Home extends React.Component<any> {
                       md={{ span: 9 }}
                       lg={{ span: 10 }}
                     >
-                      Receive a newly minted,
-                      <span className="highlight bold">
-                        {" "}
-                        tender token{" "}
-                      </span>{" "}
-                      that represents your initial stake and any earned rewards.
+                      Receive tender tokens that represent your stake and
+                      rewards.
                     </Col>
                   </Row>
                   <Row className="step">
@@ -89,7 +108,12 @@ export default class Home extends React.Component<any> {
                       md={{ span: 3 }}
                       lg={{ span: 2 }}
                     >
-                      <span className="highlight">Step 3</span>
+                      <Icon
+                        name="KeyboardArrowRight"
+                        color="#4e66de"
+                        size="60"
+                        aria-label="Bullet"
+                      />
                     </Col>
                     <Col
                       className="step-text"
@@ -97,14 +121,19 @@ export default class Home extends React.Component<any> {
                       md={{ span: 9 }}
                       lg={{ span: 10 }}
                     >
-                      With your new
-                      <span className="highlight bold"> tToken</span>, you can
-                      skip the wait of your stake's unbonding period. Go
-                      utilize, liquidize, and collateralize while you Tenderize.
+                      Withdraw your stake whenever, or use your tender tokens as
+                      you would any other: transfer, exchange, collateralize,
+                      etc.
                     </Col>
                   </Row>
                 </Heading>
               </Card>
+            </Col>
+          </Row>
+
+          <Row style={{ margin: "6em 0" }}>
+            <Col lg={{ span: 12 }}>
+              <Image src="friends.svg" style={{ width: "100%" }}></Image>
             </Col>
           </Row>
         </Container>

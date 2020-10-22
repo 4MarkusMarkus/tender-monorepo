@@ -47,7 +47,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
       tokenAllowance: "0",
       tenderAllowance: "",
       depositAmount: "",
-      withdrawAmount: "0",
+      withdrawAmount: "",
       transactionModalOpen: false,
       activeTab: "deposit",
     };
@@ -307,13 +307,13 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                   style={{ margin: "1em auto 0" }}
                 />
                 <Heading style={{ textAlign: "center" }}>{info.title}</Heading>
-                <div style={{textAlign:"center", justifyContent:"center"}}>
-                <SharePrice
-                  symbol={this.props.info.symbol}
-                  available={this.props.info.available}
-                  stakerAddress={this.props.info.stakerAddress}
-                  provider={this.props.provider}
-                />
+                <div style={{ textAlign: "center", justifyContent: "center" }}>
+                  <SharePrice
+                    symbol={this.props.info.symbol}
+                    available={this.props.info.available}
+                    stakerAddress={this.props.info.stakerAddress}
+                    provider={this.props.provider}
+                  />
                 </div>
                 {this.state.activeTab === "deposit" && (
                   <Form onSubmit={this.handleDeposit}>
@@ -328,7 +328,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                         className="amount"
                       />
                       <Form.Text className="balance">
-                        Current Balance: {this.state.tokenBalance}
+                        Current Balance: {this.state.tokenBalance + " "}
                         {this.props.info.symbol}
                       </Form.Text>
                     </Form.Group>

@@ -42,7 +42,7 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
          t${this.props.symbol} in circulation`;
 
       return (
-        <Tooltip message={text} offset="-82, 0" className="tooltip">
+        <Tooltip message={text} offset="-70, 0" className="tooltip">
           <InfoOutline className="info" />
         </Tooltip>
       );

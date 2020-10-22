@@ -16,19 +16,17 @@ import {
 } from "rimble-ui";
 
 export interface TransactionModalProps {
-  isOpen: boolean
-  onClose: Function
+  isOpen: boolean;
+  onClose: Function;
 }
 
 TransactionModal.defaultProps = {
   open: false,
-  onClose: ()=>{},
+  onClose: () => {},
 } as Partial<TransactionModalProps>;
 
-
-export default function TransactionModal(props: TransactionModalProps){
-
-  const closeModal = (e:any) => {
+export default function TransactionModal(props: TransactionModalProps) {
+  const closeModal = (e: any) => {
     e.preventDefault();
     props.onClose();
   };
