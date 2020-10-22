@@ -44,7 +44,7 @@ export default class TokenCard extends Component<TokenCardProps> {
       return (
         <Card
           className={classNames({ disabled: !info.available })}
-          style={{ marginTop: "1em" }}
+          style={{ marginTop: "1em", zIndex: 1 }}
         >
           <Avatar size="large" src={logo} style={{ margin: "1em auto 0" }} />
           <Card.Body

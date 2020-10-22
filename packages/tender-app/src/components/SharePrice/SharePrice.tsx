@@ -52,7 +52,7 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
 
       return (
         <span>
-          <Tooltip message={text} placement="right" className="tooltip">
+          <Tooltip message={text} offset="-82, 0" className="tooltip">
             <InfoOutline className="info" />
           </Tooltip>
         </span>
@@ -110,6 +110,8 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
       );
     };
 
-    return <div style={{ textAlign: "center" }}>{sharePriceChange()}</div>;
+    return (
+      <div style={{ textAlign: "center", zIndex: 2 }}>{sharePriceChange()}</div>
+    );
   }
 }
