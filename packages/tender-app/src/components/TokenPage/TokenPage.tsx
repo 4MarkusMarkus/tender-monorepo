@@ -227,7 +227,6 @@ export default class TokenPage extends Component<TokenPageProps, State> {
       return (
         <Button
           onClick={(e: any) => this.setTab(name)}
-          disabled
           className={classNames("tab", { active: active })}
           style={{
             width: "50%",
