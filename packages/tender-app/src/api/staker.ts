@@ -22,7 +22,6 @@ export async function withdraw(amount: string, stakerAddr: string, signer: ether
  
 export async function sharePrice(stakerAddr: string, provider: ethers.providers.JsonRpcProvider | ethers.providers.Web3Provider) {
     const staker = new ethers.Contract(stakerAddr, contracts.Staker, provider)
-
     return ethers.utils.formatUnits(await staker.sharePrice(), "ether")
 }
 

@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import "./Background.scss";
 
-function Background(){
-  return(
+function Background() {
+  return (
     <>
-    <div className="background"></div>
-    <div className="bg-container">
-      <div className="bg"></div>
-    </div>
+      <div className="background"></div>
+      <div className="bg-container">
+        <div className="bg-inner"></div>
+      </div>
     </>
-  )
+  );
 }
 
 export default Background;

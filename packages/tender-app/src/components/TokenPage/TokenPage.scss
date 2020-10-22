@@ -1,5 +1,19 @@
-@import '../../colors.scss';
+@import "../../colors.scss";
 
-.tab:not(.active) {
-  background: $primary;
+.balance {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.amount {
+  text-align: center;
+  font-size: 18px !important;
+  font-weight: 500;
+}
+
+.symbol {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  margin: 12px 0 0 10px;
 }

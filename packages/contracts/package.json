@@ -18,7 +18,7 @@
     "url": "git+https://github.com/Tenderize/tender-monorepo.git"
   },
   "scripts": {
-    "ganache": "ganache-cli --deterministic --defaultBalanceEther 500 --gasLimit 100000000",
+    "ganache": "ganache-cli --deterministic -m 'consider field innocent friend device noodle hat rigid team clump catch erase' --defaultBalanceEther 500 --gasLimit 100000000",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
