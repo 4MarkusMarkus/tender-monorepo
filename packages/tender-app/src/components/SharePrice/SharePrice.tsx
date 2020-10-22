@@ -1,18 +1,36 @@
 import React from "react";
 import * as api from "../../api/staker";
-import { TrendingUp, TrendingDown } from "@rimble/icons";
+import { Tooltip } from "rimble-ui";
+import { TrendingUp, TrendingDown, InfoOutline } from "@rimble/icons";
+import classNames from "classnames";
 import "./SharePrice.scss";
 
-export default class SharePrice extends React.Component<any, any> {
-  pricePlaceholder = "-.--";
+type SharePriceProps = {
+  available: boolean;
+  symbol: string;
+  stakerAddress: string;
+  showInfo: boolean;
+  provider: any;
+};
 
-  constructor(props: any) {
+export default class SharePrice extends React.Component<SharePriceProps, any> {
+  pricePlaceholder = "----";
+
+  constructor(props: SharePriceProps) {
     super(props);
     this.state = {
       startSharePrice: 1.0,
       currentSharePrice: 1.0,
     };
   }
+
+  static defaultProps = {
+    available: "",
+    symbol: "",
+    stakerAddress: "",
+    showInfo: true,
+    provider: {},
+  };
 
   async componentDidMount() {
     if (this.props.available) {
@@ -26,6 +44,21 @@ export default class SharePrice extends React.Component<any, any> {
   }
 
   render() {
+    const infoIcon = () => {
+      const text = `${sharePrice()} ${
+        this.props.symbol
+      } tokens currently staked through\n Tenderize for every
+         t${this.props.symbol} in circulation`;
+
+      return (
+        <span>
+          <Tooltip message={text} placement="right" className="tooltip">
+            <InfoOutline className="info" />
+          </Tooltip>
+        </span>
+      );
+    };
+
     const sharePrice = () => {
       if (this.props.available) {
         return this.state.currentSharePrice.toFixed(2).toString();
@@ -50,12 +83,21 @@ export default class SharePrice extends React.Component<any, any> {
 
       return change === 0 ? this.pricePlaceholder : change.toFixed(2);
     };
+
     const sharePriceChange = () => {
       return (
-        <div style={{ marginTop: 10, marginBottom: 10 }}>
-          <h3 className="price">{sharePrice()}</h3>
+        <div style={{ margin: "10 0" }}>
+          <h3
+            className={classNames("price", {
+              "info-margin": this.props.showInfo,
+            })}
+            style={{ marginLeft: "36px" }}
+          >
+            {sharePrice()}
+            {this.props.showInfo && infoIcon()}
+          </h3>
           <h4>
-            <span style={{ fontSize: 15 }}>
+            <span className="ratio">
               <sup>{this.props.symbol}</sup> &#8260;
               <sub>{`t${this.props.symbol}`}</sub>
             </span>

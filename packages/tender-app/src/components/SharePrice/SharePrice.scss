@@ -11,4 +11,21 @@
 .percent {
   font-size: 1.5rem;
   font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.ratio {
+  font-size: 15px;
+}
+
+.info {
+  margin-left: 12px;
+}
+
+.info-margin {
+  margin-left: 36px;
+}
+
+.tooltip {
+  z-index: 99999999999;
 }

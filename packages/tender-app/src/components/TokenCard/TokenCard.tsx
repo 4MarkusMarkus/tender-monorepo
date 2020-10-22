@@ -54,10 +54,11 @@ export default class TokenCard extends Component<TokenCardProps> {
               <h2>{info.title}</h2>
             </Card.Title>
             <SharePrice
-              symbol={this.props.info.symbol}
-              available={this.props.info.available}
-              stakerAddress={this.props.info.stakerAddress}
+              symbol={info.symbol}
+              available={info.available}
+              stakerAddress={info.stakerAddress}
               provider={this.props.provider}
+              showInfo={info.available}
             />
             <Button className="cta" disabled={!info.available}>
               {ctaText()}
