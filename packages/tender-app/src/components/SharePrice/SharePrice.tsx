@@ -23,17 +23,9 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
     };
   }
 
-  static defaultProps = {
-    available: false,
-    symbol: "",
-    stakerAddress: "",
-    showInfo: true,
-    provider: {},
-  };
-
   async componentDidMount() {
     if (this.props.available) {
-      await this.setState({
+      this.setState({
         ...this.state,
         currentSharePrice: parseFloat(
           await api.sharePrice(this.props.stakerAddress, this.props.provider)
@@ -69,8 +61,6 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
         return <TrendingUp color="success" className="trending" />;
       } else if (this.state.currentSharePrice < this.state.startSharePrice) {
         return <TrendingDown color="alert" className="trending" />;
-      } else {
-        // return <TrendingUp color="white" className="trending" />;
       }
     };
 
@@ -89,7 +79,8 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
 
           >
             {sharePrice()}
-
+            
+            {infoIcon()}
           </h3>
           <h4>
             <span className="ratio">
