@@ -40,7 +40,7 @@ export default class Home extends React.Component<any> {
               <Image src="liquid.png"></Image>
             </Col>
             <Col lg={{ span: 6 }} md={{ span: 6 }}>
-              <Heading as={"h4"} style={{ margin: "90px 10%", lineHeight: 2 }}>
+              <Heading as={"h4"} style={{ margin: "20% 10%", lineHeight: 2 }}>
                 Tenderize is a liquid staking protocol that lets you
                 <span style={{ fontWeight: 800 }}> leverage your tokens </span>
                 while they stake and
