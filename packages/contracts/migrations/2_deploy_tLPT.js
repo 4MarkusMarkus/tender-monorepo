@@ -35,7 +35,7 @@ module.exports = function(deployer, network, accounts) {
     tenderToken.mint(accounts[0], config.INITIAL_LIQUIDITY.toString())
 
     // Mints liquidity for another user to test trading against pool 
-    tenderToken.mint(accounts[1], config.INITIAL_LIQUIDITY.toString())
+    // tenderToken.mint(accounts[1], config.INITIAL_LIQUIDITY.toString())
 
     // Change TenderToken ownership to LivepeerStaker after deploying it
 
@@ -103,7 +103,7 @@ module.exports = function(deployer, network, accounts) {
         pool: bPool.address,
         rights: crp.address,
         tokenInitialLiquidity: config.INITIAL_LIQUIDITY.toString(),
-        tenderTokenInitialLiquidity: config.INITIAL_LIQUIDITY.toString()
+        tenderMintedForPool: config.INITIAL_LIQUIDITY.toString()
     }
 
     const livepeerStaker = await deployer.deploy(LivepeerStaker)

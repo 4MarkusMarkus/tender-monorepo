@@ -26,8 +26,8 @@ contract Staker is ProxyTarget, Ownable, IStaker {
     struct Balancer {
         IBPool pool;
         address rights;
-        uint256 tokenInitialLiquidity;
-        uint256 tenderTokenInitialLiquidity;
+        uint256 tokenInitialLiquidity; // we do not need this
+        uint256 tenderMintedForPool;
     }
 
     modifier autoCollect() {

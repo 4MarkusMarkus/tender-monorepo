@@ -10,9 +10,9 @@ import "./interfaces/livepeer/IRoundsManager.sol";
 contract LivepeerStaker is Staker {
 
     
-    uint256 public liquidityPercentage = 1e17; // we should be able to change this, should be public too, 
-    uint256 public mintedForPool;
-    uint256 public sentToPool;
+    uint256 public liquidityPercentage = 10e17; // we should be able to change this, should be public too, 
+    uint256 public tenderMintedForPool;
+
 
 
     // LivepeerStaker only supports on single delegate right now
@@ -30,8 +30,8 @@ contract LivepeerStaker is Staker {
     }
 
     function sharePrice() public override(Staker) view returns (uint256) {
-        // Get the totalSupply for tenderToken, minus the pooled amount
-        uint256 tenderSupply = tenderToken.totalSupply().sub(tenderToken.balanceOf(address(balancer.pool))); // liquidityForPool = this is liquidity of tenderToken we mint when we icrease pool liquidity
+        // Get the totalSupply for tenderToken + minted for pool - minus the pooled amount
+        uint256 tenderSupply = tenderToken.totalSupply().add(balancer.tenderMintedForPool).sub(tenderToken.balanceOf(address(balancer.pool))); // liquidityForPool = this is liquidity of tenderToken we mint when we icrease pool liquidity
 
         // Get the outstanding balance of LPT for Staker
         uint256 underlyingBalance = token.balanceOf(address(this));
@@ -42,6 +42,7 @@ contract LivepeerStaker is Staker {
         uint256 underlyingStaked = livepeer.bondingManager.pendingStake(address(this), livepeer.roundsManager.currentRound());
     
         uint256 underlyingAll = underlyingBalance.add(underlyingStaked).add(underlyingPooled);
+        
         if (tenderSupply ==  0 ) { return 1e18; }
         return underlyingAll.mul(1e18).div(tenderSupply);
     }
@@ -53,7 +54,7 @@ contract LivepeerStaker is Staker {
     ////////////helper functions for withdrawals + deposits /////////////
 
             // checks price of tender token in pool
-    function tenderPriceinPool() internal view returns (uint256) {
+    function tenderPriceinPool() public view returns (uint256) {
                 // Check arbitrage
         uint256 _tenderPoolPrice = balancer.pool.getSpotPrice(address(tenderToken), address(token)); // tLPT/LPT
         return _tenderPoolPrice;
@@ -82,7 +83,7 @@ contract LivepeerStaker is Staker {
 
     }
 
-    function targetTokenAmountToPoolPlusFee() internal view returns (uint256 targetAmountwFee) {
+    function targetTokenAmountToPoolPlusFee() public view returns (uint256 targetAmountwFee) {
         uint256 ONE = 10**18;
         uint256 targetAmountIn = targetTokenAmountToPool();
         uint256 swapFee = balancer.pool.getSwapFee();
@@ -134,28 +135,23 @@ contract LivepeerStaker is Staker {
         // calculates how much to send to pool + sends funds there 
         if(_sharePrice <= tenderPriceinPool()) {
             stakingAmount = _amount;
-        } else {
+        } else { 
             uint256 targetToPool = targetTokenAmountToPoolPlusFee();
-           stakingAmount = _amount.sub(targetToPool);
-           // swaps amount necessary for arbitrage to pool
-           swapTokenInBalancerPool(targetToPool);
+            // if more should go to pool than deposit amount, swap in whole deposit
+            if(targetToPool >= _amount)  {
+                swapTokenInBalancerPool(_amount);
+            } else {stakingAmount = _amount.sub(targetToPool);
+            // swaps amount necessary for arbitrage to pool
+            swapTokenInBalancerPool(targetToPool);
+            }
         }
 
-        // Split _amount into staking amount and liquidity amount
-        //uint256 liquidityAmount = _amount.mul(liquidityPercentage).div(1e18);
-        //uint256 stakingAmount = _amount.sub(liquidityAmount)
-
-
-        // Add Liquidity
-        //addLiquidity(liquidityAmount);
-
-
-
-        // Bond LPT
-        token.approve(address(livepeer.bondingManager), _amount);
+        // Bond LPT if there is anything to stake
+        if(stakingAmount > 0) {
+        token.approve(address(livepeer.bondingManager), stakingAmount);
         livepeer.bondingManager.bond(stakingAmount, livepeer.delegate);
-
-        emit Deposit(msg.sender, _amount, shares, _sharePrice);
+        }
+        emit Deposit(msg.sender, _amount, shares, _sharePrice); // Add how much was staked vs sent to pool
     }
 
     function withdraw(uint256 _amount) external override(Staker) {
@@ -181,7 +177,7 @@ contract LivepeerStaker is Staker {
 
         // send underlying token out
         require(token.transfer(msg.sender, outTokenFromPool));
-                                                                    //sentToPool = sentToPool.add(_amount); // 
+                                                                    //tenderMintedForPool = tenderMintedForPool.add(_amount); // 
 
 
         emit Withdraw(msg.sender, _amount, outTokenFromPool);
