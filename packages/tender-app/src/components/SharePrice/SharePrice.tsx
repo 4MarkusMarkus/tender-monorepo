@@ -10,7 +10,7 @@ export default class SharePrice extends React.Component<any, any> {
     super(props);
     this.state = {
       startSharePrice: 1.0,
-      currentSharePrice: 1.5,
+      currentSharePrice: 1.0,
     };
   }
 
