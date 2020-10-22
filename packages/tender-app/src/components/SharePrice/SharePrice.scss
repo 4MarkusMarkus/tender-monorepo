@@ -4,6 +4,10 @@
   font-weight: 900;
 }
 
+.offset {
+  margin-left: 36px;
+}
+
 .trending {
   margin: 0 5px 5px 0;
 }
@@ -19,9 +23,9 @@
 }
 
 .info {
-  margin-left: 12px;
+  margin: -12px 0 0 12px;
+  line-height: 1em;
 }
-
 
 .tooltip {
   z-index: 9999;

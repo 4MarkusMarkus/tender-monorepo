@@ -43,8 +43,8 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
 
       return (
         <Tooltip message={text} offset="-82, 0" className="tooltip">
-        <InfoOutline className="info" />
-          </Tooltip>
+          <InfoOutline className="info" />
+        </Tooltip>
       );
     };
 
@@ -71,16 +71,19 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
       return change === 0 ? this.pricePlaceholder : change.toFixed(2);
     };
 
+    const showInfoIcon = () => {
+      return this.props.available;
+    };
+
     const sharePriceChange = () => {
       return (
         <div style={{ margin: "10 0" }}>
-          <h3
-            className={"price"}
+          <h3>
+            <span className={classNames("price", { offset: showInfoIcon() })}>
+              {sharePrice()}
+            </span>
 
-          >
-            {sharePrice()}
-            
-            {infoIcon()}
+            {showInfoIcon() && infoIcon()}
           </h3>
           <h4>
             <span className="ratio">
@@ -88,7 +91,7 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
               <sub>{`t${this.props.symbol}`}</sub>
             </span>
           </h4>
-          <div style={{margin:5}}>
+          <div style={{ margin: 5 }}>
             <span>{trendingIcon()}</span>
             <span className="percent">{changeAmount()}%</span>
           </div>
@@ -96,8 +99,6 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
       );
     };
 
-    return (
-      <div>{sharePriceChange()}</div>
-    );
+    return <div>{sharePriceChange()}</div>;
   }
 }

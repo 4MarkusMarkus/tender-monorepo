@@ -2,7 +2,7 @@ import React from "react";
 import { FeaturedCards } from "..";
 import { Card, Heading, Text, Image } from "rimble-ui";
 import { Container, Row, Col } from "react-bootstrap";
-import "./home.scss"
+import "./home.scss";
 export default class Home extends React.Component<any> {
   constructor(props: any) {
     super(props);
