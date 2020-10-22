@@ -254,6 +254,14 @@ export default class TokenPage extends Component<TokenPageProps, State> {
     }
   }
 
+  maxWithdraw = () => {
+    this.setState({...this.state, withdrawAmount: this.state.tenderBalance})
+  }
+
+  maxDeposit = () => {
+    this.setState({...this.state, depositAmount: this.state.tokenBalance})
+  }
+
   render() {
     const { info } = this.props;
     const logo = require("../../img/" + info.logo);
@@ -327,7 +335,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                         placeholder={"0 " + this.props.info.symbol}
                         className="amount"
                       />
-                      <Form.Text className="balance">
+                      <Form.Text className="balance" onClick={this.maxDeposit}>
                         Current Balance: {this.state.tokenBalance + " "}
                         {this.props.info.symbol}
                       </Form.Text>
@@ -350,10 +358,10 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                         value={this.state.withdrawAmount}
                         onChange={this.handleWithdrawInputChange}
                         type="text"
-                        placeholder={"0 " + this.props.info.symbol}
+                        placeholder={`0 t${this.props.info.symbol}`}
                         className="amount"
                       />
-                      <Form.Text className="balance">
+                      <Form.Text className="balance" onClick={this.maxWithdraw}>
                         Current Balance: {this.state.tenderBalance} t
                         {this.props.info.symbol}
                       </Form.Text>

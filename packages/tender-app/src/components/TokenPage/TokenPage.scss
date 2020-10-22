@@ -3,6 +3,12 @@
 .balance {
   font-size: 18px;
   font-weight: 600;
+  color: $primary;
+}
+
+.balance:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .amount {

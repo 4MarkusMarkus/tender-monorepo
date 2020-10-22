@@ -2,6 +2,8 @@
 
 const LivepeerStaker = artifacts.require("LivepeerStaker")
 const ERC20 = artifacts.require("ERC20")
+const BPOOL = artifacts.require("IBPool")
+
 module.exports = function(callback) {
     (async function() {
         try {
@@ -15,6 +17,9 @@ module.exports = function(callback) {
             const bpool = (await livepeerStaker.balancer()).pool
 
             console.log("Share Price:", web3.utils.fromWei(await livepeerStaker.sharePrice()).toString())
+            const pool = await BPOOL.at(bpool)
+            const spotPrice = await pool.getSpotPrice(lptAddress, tenderLptAddress)
+            console.log("Spot Price:", web3.utils.fromWei(spotPrice))
 
             const tenderSupply = await tenderLpt.totalSupply()
             const bpoolTender = await tenderLpt.balanceOf(bpool)

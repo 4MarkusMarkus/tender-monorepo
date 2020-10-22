@@ -9,8 +9,6 @@ import "./interfaces/livepeer/IRoundsManager.sol";
 
 contract LivepeerStaker is Staker {
 
-    uint256 internal constant liquidityPercentage = 1e17;
-
     // LivepeerStaker only supports on single delegate right now
     // Each delegate would require a separate contract bound to this one to stake and unstake
     struct LivepeerConfig {
@@ -47,7 +45,8 @@ contract LivepeerStaker is Staker {
         return livepeer.bondingManager.pendingStake(address(this), livepeer.roundsManager.currentRound());
     }
 
-    function deposit(uint256 _amount) external override(Staker) {
+    function deposit(uint256 _amount) public override(Staker) {
+        collect();
         // Calculate share price
         uint256 sharePrice = sharePrice();
 
@@ -56,11 +55,32 @@ contract LivepeerStaker is Staker {
         // Mint tenderToken
         tenderToken.mint(msg.sender, shares);
 
+         // Transfer LPT to Staker
+        require(token.transferFrom(msg.sender, address(this), _amount), "ERR_TOKEN_TANSFERFROM");
+
+        // Check if we need to do arbitrage if spotprice is at least 10% below shareprice
+        // TODO: use proper maths (MathUtils)
+        address _token = address(token);
+        address _tenderToken = address(tenderToken);
+        uint256 spotPrice = balancer.pool.getSpotPrice(_token, _tenderToken);
+        if (spotPrice.mul(110).div(100) < sharePrice) {
+            // TODO: This will revert if the price difference is too large 
+            uint256 tokenIn = balancerCalcInGivenPrice(_token, _tenderToken, sharePrice, spotPrice);
+            if (tokenIn > _amount) {
+                tokenIn = _amount;
+            }
+            token.approve(address(balancer.pool), tokenIn);
+            (uint256 out,) = balancer.pool.swapExactAmountIn(_token, tokenIn, _tenderToken, MIN, MAX);
+            // burn the derivative amount we bought up 
+            tenderToken.burn(out);
+            _amount  = _amount.sub(tokenIn);
+        }
+
+        // TODO: require proper minimum boundary
+        if (_amount <= 1) { return; }
+
         // Split _amount into staking amount and liquidity amount
         uint256 liquidityAmount = _amount.mul(liquidityPercentage).div(1e18);
-
-        // Transfer LPT to Staker
-        require(token.transferFrom(msg.sender, address(this), _amount), "ERR_TOKEN_TANSFERFROM");
 
         // Add Liquidity
         addLiquidity(liquidityAmount);
@@ -72,36 +92,21 @@ contract LivepeerStaker is Staker {
         emit Deposit(msg.sender, _amount, shares, sharePrice);
     }
 
-    function withdraw(uint256 _amount) external override(Staker) {
-        uint256 owed = _amount.mul(sharePrice()).div(1e18);
-
-        // transferFrom tenderToken
-        require(tenderToken.transferFrom(msg.sender, address(this), _amount), "ERR_TENDER_TRANSFERFROM");
-        
-        // swap with balancer
-        uint256 out;
-        uint256 minOut = owed.mul(90).div(100); // TODO USE MATHUTILS
-        uint256 maxSpotPrice = balancer.pool.getSpotPrice(address(tenderToken), address(token)).mul(110).div(100); // TODO: USE MATHUTILS
-        // Approve token 
-        tenderToken.approve(address(balancer.pool), _amount);
-        (out,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), minOut, maxSpotPrice);
-
-        // send underlying
-        require(token.transfer(msg.sender, out));
-
-        emit Withdraw(msg.sender, _amount, out);
+    function withdraw(uint256 _amount) public override(Staker) {
+        collect();
+        super.withdraw(_amount);
     }
 
     function collect() public override(Staker) {
-        // TODO: check pending fees
-        uint256 balanceBefore = address(this).balance;
-        livepeer.bondingManager.withdrawFees();
-        uint256 balanceAfter = address(this).balance;
+        // TODO: check if there's fees to withdraw, this is slightly annoying in Livepeer as it requires 2 external calls
+        // Will likely end up adding functionality to Livepeer that jsut returns the fees to still be claimed 
+        // This function will revert if there are no fees
+        withdrawFees();
 
-        // TODO: Require minimum
-        uint256 swapAmount = balanceAfter.sub(balanceBefore);
-        if (swapAmount < 1) {
-            // don't revert here because otherwise deposits/withdrawals would revert as well 
+        uint256 swapAmount = address(this).balance;
+        // need at least 0.5 ETH to swap to make it worthwhile
+        // TODO: Refund the gas cost of WETH Wrapping and swapping to the caller (or a portion of it)
+        if (swapAmount < 5e17) {
             return;
         }
 
@@ -114,17 +119,20 @@ contract LivepeerStaker is Staker {
         weth.approve(address(oneInch), swapAmount);
         returnAmount = oneInch.swap(IERC20(address(weth)), token, swapAmount, returnAmount, distribution, 0);
 
-        // TODO: roll over if minimum isn't reached
-        if (returnAmount < 1) { 
-            return;
-        }
-
         // TODO: Check arbitrage 
 
         // Send a percentage to liquidity pool
         uint256 liquidityAmount = returnAmount.mul(liquidityPercentage).div(1e18);
 
         livepeer.bondingManager.bond(returnAmount.sub(liquidityAmount), address(this));
+    }
+
+    function withdrawFees() internal {
+        try livepeer.bondingManager.withdrawFees() {
+            return;
+        } catch {
+            return;
+        }
     }
 
 }
