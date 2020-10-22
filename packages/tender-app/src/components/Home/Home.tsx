@@ -14,17 +14,18 @@ export default class Home extends React.Component<any> {
           <Row className="app-header">
             <Col md={{ span: 12 }}>
               <Heading className="title" style={{ marginTop: "1em" }}>
-                The tastiest
-                <span style={{ color: "#4E66DE" }}> liquid stake</span>
+                Don&apos;t just stake me,
               </Heading>
-              <Heading className="title">money can buy.</Heading>
+              <Heading className="title">
+                <span style={{ color: "#4E66DE" }}>Tenderize</span> me first
+              </Heading>
               <Text
                 className="subtext"
                 style={{ marginTop: "1em", fontWeight: "600" }}
               >
-                Make staking
+                Make
                 <span style={{ color: "#4E66DE", fontWeight: 900 }}>
-                  {" easier "}
+                  {" staking easier "}
                 </span>
                 to chew.
               </Text>
