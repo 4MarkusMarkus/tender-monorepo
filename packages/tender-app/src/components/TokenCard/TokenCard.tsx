@@ -58,7 +58,6 @@ export default class TokenCard extends Component<TokenCardProps> {
               available={info.available}
               stakerAddress={info.stakerAddress}
               provider={this.props.provider}
-              showInfo={info.available}
             />
             <Button className="cta" disabled={!info.available}>
               {ctaText()}

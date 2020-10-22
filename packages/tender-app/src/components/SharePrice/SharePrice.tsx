@@ -9,12 +9,11 @@ type SharePriceProps = {
   available: boolean;
   symbol: string;
   stakerAddress: string;
-  showInfo: boolean;
   provider: any;
 };
 
 export default class SharePrice extends React.Component<SharePriceProps, any> {
-  pricePlaceholder = "----";
+  pricePlaceholder = "-.--";
 
   constructor(props: SharePriceProps) {
     super(props);
@@ -25,7 +24,7 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
   }
 
   static defaultProps = {
-    available: "",
+    available: false,
     symbol: "",
     stakerAddress: "",
     showInfo: true,
@@ -51,11 +50,9 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
          t${this.props.symbol} in circulation`;
 
       return (
-        <span>
-          <Tooltip message={text} offset="-82, 0" className="tooltip">
-            <InfoOutline className="info" />
+        <Tooltip message={text} offset="-82, 0" className="tooltip">
+        <InfoOutline className="info" />
           </Tooltip>
-        </span>
       );
     };
 
@@ -73,7 +70,7 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
       } else if (this.state.currentSharePrice < this.state.startSharePrice) {
         return <TrendingDown color="alert" className="trending" />;
       } else {
-        return <TrendingUp color="white" className="trending" />;
+        // return <TrendingUp color="white" className="trending" />;
       }
     };
 
@@ -88,13 +85,11 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
       return (
         <div style={{ margin: "10 0" }}>
           <h3
-            className={classNames("price", {
-              "info-margin": this.props.showInfo,
-            })}
-            style={{ marginLeft: "36px" }}
+            className={"price"}
+
           >
             {sharePrice()}
-            {this.props.showInfo && infoIcon()}
+
           </h3>
           <h4>
             <span className="ratio">
@@ -102,16 +97,16 @@ export default class SharePrice extends React.Component<SharePriceProps, any> {
               <sub>{`t${this.props.symbol}`}</sub>
             </span>
           </h4>
-          <span>
+          <div style={{margin:5}}>
             <span>{trendingIcon()}</span>
             <span className="percent">{changeAmount()}%</span>
-          </span>
+          </div>
         </div>
       );
     };
 
     return (
-      <div style={{ textAlign: "center", zIndex: 2 }}>{sharePriceChange()}</div>
+      <div>{sharePriceChange()}</div>
     );
   }
 }
