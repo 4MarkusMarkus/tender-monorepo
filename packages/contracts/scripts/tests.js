@@ -19,21 +19,21 @@ module.exports = function(callback) {
 
             const deposit = web3.utils.toWei("400")
 
-            // console.log("===== Deposit =====")
-            // console.log("LPT Balance Before: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
-            // console.log("tLPT Balance Before: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
+            console.log("===== Deposit =====")
+            console.log("LPT Balance Before: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
+            console.log("tLPT Balance Before: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
 
-            // await lpt.approve(livepeerStaker.address, deposit)
-            // await livepeerStaker.deposit(deposit)
+            await lpt.approve(livepeerStaker.address, deposit)
+            await livepeerStaker.deposit(deposit)
 
-            // console.log("LPT Balance After Deposit: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
-            // console.log("tLPT Balance After Deposit: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
+            console.log("LPT Balance After Deposit: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
+            console.log("tLPT Balance After Deposit: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0])))
 
-            console.log("==== Withdraw ====")
-            await tenderLpt.approve(livepeerStaker.address, deposit)
-            await livepeerStaker.withdraw(deposit)
-            console.log("LPT Balance After Withdraw: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
-            console.log("tLPT Balance After Withdraw: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0]))) 
+            // console.log("==== Withdraw ====")
+            // await tenderLpt.approve(livepeerStaker.address, deposit)
+            // await livepeerStaker.withdraw(deposit)
+            // console.log("LPT Balance After Withdraw: ", web3.utils.fromWei(await lpt.balanceOf(accounts[0])))
+            // console.log("tLPT Balance After Withdraw: ", web3.utils.fromWei(await tenderLpt.balanceOf(accounts[0]))) 
 
     
 

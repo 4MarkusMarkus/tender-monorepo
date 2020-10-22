@@ -47,7 +47,7 @@ contract LivepeerStaker is Staker {
         return livepeer.bondingManager.pendingStake(address(this), livepeer.roundsManager.currentRound());
     }
 
-    function deposit(uint256 _amount) external override(Staker) {
+    function deposit(uint256 _amount) external override(Staker) autoCollect {
         // Calculate share price
         uint256 sharePrice = sharePrice();
 
@@ -56,7 +56,7 @@ contract LivepeerStaker is Staker {
         // Mint tenderToken
         tenderToken.mint(msg.sender, shares);
 
-        // Transfer LPT to Staker
+         // Transfer LPT to Staker
         require(token.transferFrom(msg.sender, address(this), _amount), "ERR_TOKEN_TANSFERFROM");
 
         // Check if we need to do arbitrage if spotprice is at least 10% below shareprice
@@ -92,7 +92,7 @@ contract LivepeerStaker is Staker {
         emit Deposit(msg.sender, _amount, shares, sharePrice);
     }
 
-    function withdraw(uint256 _amount) external override(Staker) {
+    function withdraw(uint256 _amount) external override(Staker) autoCollect {
         uint256 owed = _amount.mul(sharePrice()).div(1e18);
 
         // transferFrom tenderToken
@@ -110,12 +110,12 @@ contract LivepeerStaker is Staker {
     }
 
     function collect() public override(Staker) {
-        // TODO: check pending fees
-        uint256 balanceBefore = address(this).balance;
-        livepeer.bondingManager.withdrawFees();
-        uint256 balanceAfter = address(this).balance;
+        // TODO: check if there's fees to withdraw, this is slightly annoying in Livepeer as it requires 2 external calls
+        // Will likely end up adding functionality to Livepeer that jsut returns the fees to still be claimed 
+        // This function will revert if there are no fees
+        withdrawFees();
 
-        uint256 swapAmount = balanceAfter.sub(balanceBefore);
+        uint256 swapAmount = address(this).balance;
         // need at least 0.5 ETH to swap
         if (swapAmount < 5e17) {
             return;
@@ -136,6 +136,14 @@ contract LivepeerStaker is Staker {
         uint256 liquidityAmount = returnAmount.mul(liquidityPercentage).div(1e18);
 
         livepeer.bondingManager.bond(returnAmount.sub(liquidityAmount), address(this));
+    }
+
+    function withdrawFees() internal {
+        try livepeer.bondingManager.withdrawFees() {
+            return;
+        } catch {
+            return;
+        }
     }
 
 }
