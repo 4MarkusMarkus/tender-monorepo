@@ -327,7 +327,7 @@ export default class TokenPage extends Component<TokenPageProps, State> {
                         className="amount"
                       />
                       <Form.Text className="balance">
-                        Current Balance: {this.state.tokenBalance}{" "}
+                        Current Balance: {this.state.tokenBalance}
                         {this.props.info.symbol}
                       </Form.Text>
                     </Form.Group>

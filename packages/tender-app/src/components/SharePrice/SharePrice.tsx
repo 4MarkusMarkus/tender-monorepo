@@ -56,7 +56,7 @@ export default class SharePrice extends React.Component<any, any> {
           <h3 className="price">{sharePrice()}</h3>
           <h4>
             <span style={{ fontSize: 15 }}>
-              <sup>{this.props.symbol}</sup> &#8260;{" "}
+              <sup>{this.props.symbol}</sup> &#8260;
               <sub>{`t${this.props.symbol}`}</sub>
             </span>
           </h4>
