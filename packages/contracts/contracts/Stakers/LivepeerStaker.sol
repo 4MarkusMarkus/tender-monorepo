@@ -56,11 +56,31 @@ contract LivepeerStaker is Staker {
         // Mint tenderToken
         tenderToken.mint(msg.sender, shares);
 
-        // Split _amount into staking amount and liquidity amount
-        uint256 liquidityAmount = _amount.mul(liquidityPercentage).div(1e18);
-
         // Transfer LPT to Staker
         require(token.transferFrom(msg.sender, address(this), _amount), "ERR_TOKEN_TANSFERFROM");
+
+        // Check if we need to do arbitrage if spotprice is at least 10% below shareprice
+        // TODO: use proper maths (MathUtils)
+        address _token = address(token);
+        address _tenderToken = address(tenderToken);
+        uint256 spotPrice = balancer.pool.getSpotPrice(_token, _tenderToken);
+        if (spotPrice.mul(110).div(100) < sharePrice) {
+            uint256 tokenIn = balancerCalcInGivenPrice(_token, _tenderToken, sharePrice, spotPrice);
+            if (tokenIn > _amount) {
+                tokenIn = _amount;
+            }
+            token.approve(address(balancer.pool), tokenIn);
+            (uint256 out,) = balancer.pool.swapExactAmountIn(_token, tokenIn, _tenderToken, MIN, MAX);
+            // burn the derivative amount we bought up 
+            tenderToken.burn(out);
+            _amount  = _amount.sub(tokenIn);
+        }
+
+        // TODO: require proper minimum boundary
+        if (_amount <= 1) { return; }
+
+        // Split _amount into staking amount and liquidity amount
+        uint256 liquidityAmount = _amount.mul(liquidityPercentage).div(1e18);
 
         // Add Liquidity
         addLiquidity(liquidityAmount);
@@ -79,12 +99,9 @@ contract LivepeerStaker is Staker {
         require(tenderToken.transferFrom(msg.sender, address(this), _amount), "ERR_TENDER_TRANSFERFROM");
         
         // swap with balancer
-        uint256 out;
-        uint256 minOut = owed.mul(90).div(100); // TODO USE MATHUTILS
-        uint256 maxSpotPrice = balancer.pool.getSpotPrice(address(tenderToken), address(token)).mul(110).div(100); // TODO: USE MATHUTILS
         // Approve token 
         tenderToken.approve(address(balancer.pool), _amount);
-        (out,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), minOut, maxSpotPrice);
+        (uint256 out,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), MIN, MAX);
 
         // send underlying
         require(token.transfer(msg.sender, out));
@@ -98,10 +115,9 @@ contract LivepeerStaker is Staker {
         livepeer.bondingManager.withdrawFees();
         uint256 balanceAfter = address(this).balance;
 
-        // TODO: Require minimum
         uint256 swapAmount = balanceAfter.sub(balanceBefore);
-        if (swapAmount < 1) {
-            // don't revert here because otherwise deposits/withdrawals would revert as well 
+        // need at least 0.5 ETH to swap
+        if (swapAmount < 5e17) {
             return;
         }
 
@@ -113,11 +129,6 @@ contract LivepeerStaker is Staker {
         (uint256 returnAmount, uint256[] memory distribution) = oneInch.getExpectedReturn(IERC20(address(weth)), token, swapAmount, 2, 0);
         weth.approve(address(oneInch), swapAmount);
         returnAmount = oneInch.swap(IERC20(address(weth)), token, swapAmount, returnAmount, distribution, 0);
-
-        // TODO: roll over if minimum isn't reached
-        if (returnAmount < 1) { 
-            return;
-        }
 
         // TODO: Check arbitrage 
 

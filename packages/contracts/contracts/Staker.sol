@@ -18,10 +18,16 @@ import "./Swap/IBPool.sol";
 import "./Swap/IOneInch.sol";
 import "./Swap/IWETH.sol";
 
+import "./Balancer/contracts/test/BNum.sol";
+
 // WETH Address 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
 
-contract Staker is ProxyTarget, Ownable, IStaker {
+contract Staker is ProxyTarget, Ownable, IStaker, BNum {
     using SafeMath for uint256;
+
+    uint256 constant ONE = 1e18;
+    uint256 constant MAX = 2**256-1;
+    uint256 constant MIN = 1; 
 
     struct Balancer {
         IBPool pool;
@@ -108,5 +114,26 @@ contract Staker is ProxyTarget, Ownable, IStaker {
         // Gulp the tokens into the pool
         balancer.pool.gulp(address(tenderToken));
         balancer.pool.gulp(address(token));
+    }
+
+    function balancerCalcInGivenPriceSansFee(address _tokenIn, address _tokenOut, uint256 _targetPrice, uint256 _spotPrice) public view returns (uint256 tokenIn) {
+        uint256 tokenOutDenorm = balancer.pool.getDenormalizedWeight(_tokenOut);
+        uint256 weightRatio = bdiv(
+            tokenOutDenorm,
+            badd(balancer.pool.getDenormalizedWeight(_tokenIn), tokenOutDenorm)
+        );
+
+        uint256 priceRatio = bdiv(_targetPrice, _spotPrice);
+        uint256 norm = bpow(priceRatio, weightRatio);
+        return bmul(
+            balancer.pool.getBalance(_tokenIn),
+            bsub(norm, ONE)
+        );
+    }
+
+    function balancerCalcInGivenPrice(address _tokenIn, address _tokenOut, uint256 _targetPrice, uint256 _spotPrice) public view returns (uint256 tokenIn) {
+        uint256 tokenIn = balancerCalcInGivenPriceSansFee(_tokenIn, _tokenOut, _targetPrice, _spotPrice);
+        uint256 swapFee = balancer.pool.getSwapFee();
+        return tokenIn.mul(swapFee.add(ONE)).div(ONE);
     }
 }
