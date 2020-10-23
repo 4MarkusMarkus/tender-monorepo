@@ -14,7 +14,7 @@ const stakers: Stakers =  {
     "/stakers/livepeer": {
         title: "Livepeer",
         description: "The Livepeer project aims to deliver a live video streaming network protocol that is fully decentralized, highly scalable, crypto token incentivized, and results in a solution which can serve as the live media layer in the decentralized development (web3) stack. In addition, Livepeer is meant to provide an economically efficient alternative to centralized broadcasting solutions for any existing broadcaster. In this document we describe the Livepeer Protocol - a delegated stake based protocol for incentivizing participants in a live video broadcast network in a game-theoretically secure way.",
-        stakerAddress: "0xe10101d8E0cDAbD40Ac6C6637C1eC8A11470FFfc",
+        stakerAddress: "0x2b40a9f98a208D2a0700e78663f3504E7AE45f30",
         available: true,
         apy: 23.3,
         logo: "livepeer.svg",
@@ -23,7 +23,7 @@ const stakers: Stakers =  {
     "/stakers/keep": {
         title: "Keep",
         description: "Keeps provide a bridge between the world of public blockchains and private data. It enables a new wave of ground-up innovation for blockchain developers",
-        stakerAddress: "0x4185aaD28Ea6e4AC91Fb73439b29F8CB35fC86C6",
+        stakerAddress: "0xF8F0679AE3562C70D09503d560D99F386dC7a37e",
         available: true,
         apy: 8.1,
         logo: "keep.svg",

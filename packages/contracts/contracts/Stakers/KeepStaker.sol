@@ -75,8 +75,20 @@ contract KeepStaker is Staker {
     }
 
     function withdraw(uint256 _amount) public override(Staker) {
-        collect();
-        super.withdraw(_amount);
+        uint256 owed = _amount.mul(sharePrice()).div(1e18);
+
+        // transferFrom tenderToken
+        require(tenderToken.transferFrom(msg.sender, address(this), _amount), "ERR_TENDER_TRANSFERFROM");
+        
+        // swap with balancer
+        // Approve token 
+        tenderToken.approve(address(balancer.pool), _amount);
+        (uint256 out,) = balancer.pool.swapExactAmountIn(address(tenderToken), _amount, address(token), MIN, MAX);
+
+        // send underlying
+        require(token.transfer(msg.sender, out));
+
+        emit Withdraw(msg.sender, _amount, out);
     }
 
 }
